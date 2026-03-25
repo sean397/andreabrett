@@ -1049,6 +1049,8 @@
         // Revert to CSS defaults on desktop
         center.style.top      = '';
         center.style.maxWidth = '';
+        center.querySelector('.song-title').style.fontSize = '';
+        center.querySelector('.artist-name').style.fontSize = '';
       } else {
         // Full true circle.
         // Both tablet and phone: radius keeps tiles clear of the content block.
@@ -1074,6 +1076,14 @@
         const safeWidth = Math.max(180, Math.round(2 * r - 2 * (tileSize + gap)));
         center.style.top      = cy + 'px';
         center.style.maxWidth = safeWidth + 'px';
+
+        // Scale text to match the container — font size must be derived from safeWidth
+        // (not vw) so it tracks the circle rather than the raw viewport width.
+        // Coefficient 0.115 tuned for Cormorant uppercase with 0.10–0.14em letter-spacing.
+        const titleSize  = Math.max(isTablet ? 22 : 16, Math.round(safeWidth * 0.115));
+        const artistSize = Math.max(10, Math.round(safeWidth * 0.038));
+        center.querySelector('.song-title').style.fontSize  = titleSize  + 'px';
+        center.querySelector('.artist-name').style.fontSize = artistSize + 'px';
       }
     }
     window.addEventListener('resize', () => { if (current === 2) layoutArc(); });
