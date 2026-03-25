@@ -312,7 +312,7 @@
     /* Center content */
     .arc-center {
       position: absolute;
-      left: 50%; top: 58%;
+      left: 50%; top: 62%;
       transform: translate(-50%, -50%);
       text-align: center;
       width: 100%; max-width: 860px;
@@ -546,10 +546,11 @@
     /* ── Tablet (600–1024px) ── */
     @media (max-width: 1024px) {
       .arc-center {
-        padding: 28px 24px;
-        top: 60%;
+        padding: 20px 24px;
+        top: 47%;
       }
-      .cta-swap { max-width: 100%; }
+      .bg-art { display: none; }
+      .cta-swap { max-width: 340px; }
       .song-title { letter-spacing: 0.14em; }
     }
 
@@ -862,8 +863,8 @@
       boxRunning = true;
       soundBtn.classList.add('visible');
       showVideoBg();
-      // On mobile, always fade out cover art so breathing screen stays clean
-      if (window.innerWidth <= 600) {
+      // Below desktop, fade out cover art so breathing screen stays clean
+      if (window.innerWidth < 1024) {
         const bg = document.getElementById('page-bg');
         bg.style.transition = 'opacity 1.4s ease';
         bg.style.opacity = '0';
@@ -998,8 +999,8 @@
     function enterSong() {
       setProgress(100);
       hideVideoBg();
-      // Only restore cover art background on desktop — on mobile it clashes with content
-      if (window.innerWidth > 600) {
+      // Only restore cover art background on desktop — tablets and below use clean black
+      if (window.innerWidth >= 1024) {
         const bg = document.getElementById('page-bg');
         bg.style.transition = 'opacity 1.4s ease';
         bg.style.opacity = '0.90';
@@ -1019,17 +1020,20 @@
       const canvas = document.getElementById('arc-canvas');
       const tiles  = Array.from(canvas.querySelectorAll('.arc-tile'));
       const W = window.innerWidth, H = window.innerHeight;
-      const isPhone  = W < 600;
-      const isTablet = W >= 600 && W < 1024;
-      const tileSize = isPhone ? 46 : isTablet ? 76 : 88;
+      const isDesktop = W >= 1024;
+      const isTablet  = W >= 600 && W < 1024;
+      const tileSize  = isDesktop ? 88 : isTablet ? 64 : 46;
       const n = tiles.length;
+      const cx = W / 2;
 
-      if (isPhone) {
-        // Full circle — radius larger than half-screen width so tiles bleed off edges (matching reference)
-        const cx = W / 2, cy = H * 0.48;
-        const r  = W * 0.56;   // ≈210px on 375px screen; tiles at 3/9 o'clock bleed off edges
+      if (isDesktop) {
+        // True circle — large enough radius so tiles always clear the central content.
+        // Circle centre sits just below the fold; only the upper semicircle is visible.
+        const r  = Math.max(W * 0.55, H * 0.90);
+        const cy = H + tileSize * 0.6;   // centre just below bottom edge
         tiles.forEach((tile, i) => {
-          const angle = (i / n) * 2 * Math.PI - Math.PI / 2;
+          const t     = n === 1 ? 0.5 : i / (n - 1);
+          const angle = -Math.PI + t * Math.PI; // -180° → 0°  (top arc)
           const x = cx + r * Math.cos(angle) - tileSize / 2;
           const y = cy + r * Math.sin(angle) - tileSize / 2;
           const rotDeg = ((angle + Math.PI / 2) * 180 / Math.PI).toFixed(1);
@@ -1041,22 +1045,19 @@
           tile.style.setProperty('--rot', rotDeg + 'deg');
         });
       } else {
-        // Top semicircle for desktop / tablet
-        const cx = W / 2, cy = H * 1.05;
-        const rx = isTablet ? W * 0.42 : W * 0.50;
-        const ry = H * 0.92;
+        // Full true circle — phone bleeds off edges slightly; tablet contained within screen
+        const r  = isTablet ? Math.min(W * 0.40, H * 0.38) : W * 0.54;
+        const cy = H * 0.47;
         tiles.forEach((tile, i) => {
-          const t     = n === 1 ? 0.5 : i / (n - 1);
-          const angle = -Math.PI + t * Math.PI;
-          const x = cx + rx * Math.cos(angle) - tileSize / 2;
-          const y = cy + ry * Math.sin(angle) - tileSize / 2;
+          const angle = (i / n) * 2 * Math.PI - Math.PI / 2; // start at 12 o'clock
+          const x = cx + r * Math.cos(angle) - tileSize / 2;
+          const y = cy + r * Math.sin(angle) - tileSize / 2;
           const rotDeg = ((angle + Math.PI / 2) * 180 / Math.PI).toFixed(1);
           tile.style.width  = tileSize + 'px';
           tile.style.height = tileSize + 'px';
           tile.style.left   = x + 'px';
           tile.style.top    = y + 'px';
-          const dist = Math.abs(t - 0.5) * 2;
-          tile.style.setProperty('--s', (1 - dist * 0.15).toFixed(3));
+          tile.style.setProperty('--s', '1');
           tile.style.setProperty('--rot', rotDeg + 'deg');
         });
       }
