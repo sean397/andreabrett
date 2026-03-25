@@ -1125,7 +1125,7 @@
         center.style.maxWidth = Math.round(cw) + 'px';
 
       } else {
-        const r  = isTablet ? Math.min(W * 0.42, H * 0.34) : Math.min(W * 0.43, H * 0.30);
+        const r  = isTablet ? Math.min(W * 0.52, H * 0.38) : W * 0.58;
         const cy = H * 0.44;
         tiles.forEach((tile, i) => {
           const angle = (i / n) * 2 * Math.PI - Math.PI / 2;
@@ -1240,7 +1240,7 @@
         r  = Math.max(W * 0.55, H * 0.90);
         cy = H + tileSize * 0.6;
       } else {
-        r  = isTablet ? Math.min(W * 0.42, H * 0.34) : Math.min(W * 0.43, H * 0.30);
+        r  = isTablet ? Math.min(W * 0.52, H * 0.38) : W * 0.58;
         cy = H * 0.44;
       }
       orbitState = { r, cx, cy, tileSize, n, isDesktop, tiles };
