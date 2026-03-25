@@ -52,12 +52,12 @@
       overflow: hidden;
     }
 
-    /* Full-page cover art background — behind all screens */
+    /* Full-page background — behind all screens */
     #page-bg {
       position: fixed; inset: 0; z-index: 0;
       background:
         linear-gradient(to bottom, rgba(8,8,8,0.92) 0%, transparent 20%, transparent 76%, rgba(8,8,8,0.92) 100%),
-        url('./cover-art.png') center 55% / cover no-repeat;
+        url('./desktop_bg.png') center center / cover no-repeat;
       opacity: 0.90;
       pointer-events: none;
     }
@@ -271,7 +271,7 @@
 
     .bg-art {
       position: absolute; inset: 0;
-      background: url('./cover-art.png') center 70% / cover no-repeat;
+      background: url('./desktop_bg.png') center center / cover no-repeat;
       opacity: 0.05; pointer-events: none;
     }
     .bg-fade {
@@ -556,11 +556,11 @@
 
     /* ── Phone (≤ 600px) ── */
     @media (max-width: 600px) {
-      .arc-tile { width: 46px; height: 46px; border-radius: 9px; }
+      .arc-tile { width: 42px; height: 42px; border-radius: 8px; }
 
       .arc-center {
         padding: 8px 18px;
-        top: 50%;
+        top: 47%;
       }
 
       .song-title {
@@ -1022,7 +1022,7 @@
       const W = window.innerWidth, H = window.innerHeight;
       const isDesktop = W >= 1024;
       const isTablet  = W >= 600 && W < 1024;
-      const tileSize  = isDesktop ? 88 : isTablet ? 64 : 46;
+      const tileSize  = isDesktop ? 88 : isTablet ? 64 : 42;
       const n = tiles.length;
       const cx = W / 2;
 
@@ -1045,8 +1045,10 @@
           tile.style.setProperty('--rot', rotDeg + 'deg');
         });
       } else {
-        // Full true circle — phone bleeds off edges slightly; tablet contained within screen
-        const r  = isTablet ? Math.min(W * 0.40, H * 0.38) : W * 0.54;
+        // Full true circle.
+        // Phone: radius = H*0.36 so 3/9 o'clock tiles go off-screen; content sits cleanly inside.
+        // Tablet: radius = min(W,H)*0.38 to fill the viewport nicely.
+        const r  = isTablet ? Math.min(W * 0.40, H * 0.38) : H * 0.36;
         const cy = H * 0.47;
         tiles.forEach((tile, i) => {
           const angle = (i / n) * 2 * Math.PI - Math.PI / 2; // start at 12 o'clock
