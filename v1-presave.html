@@ -579,11 +579,11 @@
 
     /* ── Phone (≤ 600px) ── */
     @media (max-width: 600px) {
-      .arc-tile { width: 42px; height: 42px; border-radius: 8px; }
+      .arc-tile { width: 36px; height: 36px; border-radius: 7px; }
 
       .arc-center {
-        padding: 8px 18px;
-        top: 47%;
+        padding: 8px 14px;
+        top: 44%;
       }
 
       .song-title {
@@ -1048,7 +1048,7 @@
       const W = window.innerWidth, H = window.innerHeight;
       const isDesktop = W >= 1024;
       const isTablet  = W >= 600 && W < 1024;
-      const tileSize  = isDesktop ? 88 : isTablet ? 64 : 42;
+      const tileSize  = isDesktop ? 88 : isTablet ? 64 : 36;
       const n = tiles.length;
       const cx = W / 2;
       const center   = document.querySelector('.arc-center');
@@ -1125,8 +1125,8 @@
         center.style.maxWidth = Math.round(cw) + 'px';
 
       } else {
-        const r  = isTablet ? Math.min(W * 0.38, H * 0.34) : H * 0.22;
-        const cy = H * 0.47;
+        const r  = isTablet ? Math.min(W * 0.42, H * 0.34) : Math.min(W * 0.43, H * 0.30);
+        const cy = H * 0.44;
         tiles.forEach((tile, i) => {
           const angle = (i / n) * 2 * Math.PI - Math.PI / 2;
           const x = cx + r * Math.cos(angle) - tileSize / 2;
@@ -1232,7 +1232,7 @@
       const W = window.innerWidth, H = window.innerHeight;
       const isDesktop = W >= 1024;
       const isTablet  = W >= 600 && W < 1024;
-      const tileSize  = isDesktop ? 88 : isTablet ? 64 : 42;
+      const tileSize  = isDesktop ? 88 : isTablet ? 64 : 36;
       const n = tiles.length;
       const cx = W / 2;
       let r, cy;
@@ -1240,8 +1240,8 @@
         r  = Math.max(W * 0.55, H * 0.90);
         cy = H + tileSize * 0.6;
       } else {
-        r  = isTablet ? Math.min(W * 0.38, H * 0.34) : H * 0.22;
-        cy = H * 0.47;
+        r  = isTablet ? Math.min(W * 0.42, H * 0.34) : Math.min(W * 0.43, H * 0.30);
+        cy = H * 0.44;
       }
       orbitState = { r, cx, cy, tileSize, n, isDesktop, tiles };
 
