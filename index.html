@@ -1022,12 +1022,10 @@
     function enterSong() {
       setProgress(100);
       hideVideoBg();
-      // Only restore cover art background on desktop — tablets and below use clean black
-      if (window.innerWidth >= 1024) {
-        const bg = document.getElementById('page-bg');
-        bg.style.transition = 'opacity 1.4s ease';
-        bg.style.opacity = '0.90';
-      }
+      // Restore the background image on all screen sizes
+      const bg = document.getElementById('page-bg');
+      bg.style.transition = 'opacity 1.4s ease';
+      bg.style.opacity = '0.90';
       layoutArc();
       // Stagger tile reveals, then start orbit animation
       const arcTiles = document.querySelectorAll('.arc-tile');
