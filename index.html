@@ -353,7 +353,7 @@
     .cta-wrap { display: flex; flex-direction: column; align-items: center; }
     .cta-swap {
       width: 100%; max-width: 370px;
-      min-height: 210px; /* fixed height so swapping CTAs never shifts the title position */
+      min-height: auto;
       text-align: center;
     }
     .presave-btns {
@@ -1025,17 +1025,17 @@
       const tileSize  = isDesktop ? 88 : isTablet ? 64 : 42;
       const n = tiles.length;
       const cx = W / 2;
-
-      const center = document.querySelector('.arc-center');
+      const center   = document.querySelector('.arc-center');
+      const titleEl  = center.querySelector('.song-title');
+      const artistEl = center.querySelector('.artist-name');
+      const PAD = 20; // uniform gap between inner tile edge and content edge
 
       if (isDesktop) {
-        // True circle — large enough radius so tiles always clear the central content.
-        // Circle centre sits just below the fold; only the upper semicircle is visible.
         const r  = Math.max(W * 0.55, H * 0.90);
-        const cy = H + tileSize * 0.6;   // centre just below bottom edge
+        const cy = H + tileSize * 0.6;
         tiles.forEach((tile, i) => {
           const t     = n === 1 ? 0.5 : i / (n - 1);
-          const angle = -Math.PI + t * Math.PI; // -180° → 0°  (top arc)
+          const angle = -Math.PI + t * Math.PI;
           const x = cx + r * Math.cos(angle) - tileSize / 2;
           const y = cy + r * Math.sin(angle) - tileSize / 2;
           const rotDeg = ((angle + Math.PI / 2) * 180 / Math.PI).toFixed(1);
@@ -1046,20 +1046,33 @@
           tile.style.setProperty('--s', '1');
           tile.style.setProperty('--rot', rotDeg + 'deg');
         });
-        // Revert to CSS defaults on desktop
-        center.style.top      = '';
-        center.style.maxWidth = '';
-        center.querySelector('.song-title').style.fontSize = '';
-        center.querySelector('.artist-name').style.fontSize = '';
+
+        // Inscribe content inside the arc with uniform padding from tiles.
+        // rInner = distance from circle centre to inner edge of tiles, minus gap.
+        const rInner = r - tileSize / 2 - PAD;
+
+        // Step 1: Set font from rInner (constant — avoids oscillation).
+        const fs = Math.max(32, Math.min(84, Math.round(rInner * 0.11)));
+        titleEl.style.fontSize  = fs + 'px';
+        artistEl.style.fontSize = Math.max(12, Math.round(fs * 0.22)) + 'px';
+        center.style.top = '68%'; // lower than default 62% — gives wider chord at content top
+
+        // Step 2: Set generous width, measure, compute chord at content top.
+        // Two passes so the reflow from the first width adjustment is accounted for.
+        let cw = 860;
+        for (let pass = 0; pass < 2; pass++) {
+          center.style.maxWidth = Math.round(cw) + 'px';
+          const dy = cy - center.getBoundingClientRect().top;
+          if (dy >= rInner) { cw = Math.round(rInner * 0.7); }
+          else { cw = Math.min(860, 2 * Math.sqrt(rInner * rInner - dy * dy)); }
+        }
+        center.style.maxWidth = Math.round(cw) + 'px';
+
       } else {
-        // Full true circle.
-        // Both tablet and phone: radius keeps tiles clear of the content block.
-        // Side tiles bleed off screen edges giving the immersive full-circle look.
-        // Tablet uses a slightly larger coefficient since tiles are bigger (64px vs 42px).
-        const r  = isTablet ? Math.min(W * 0.38, H * 0.28) : H * 0.22;
+        const r  = isTablet ? Math.min(W * 0.38, H * 0.34) : H * 0.22;
         const cy = H * 0.47;
         tiles.forEach((tile, i) => {
-          const angle = (i / n) * 2 * Math.PI - Math.PI / 2; // start at 12 o'clock
+          const angle = (i / n) * 2 * Math.PI - Math.PI / 2;
           const x = cx + r * Math.cos(angle) - tileSize / 2;
           const y = cy + r * Math.sin(angle) - tileSize / 2;
           const rotDeg = ((angle + Math.PI / 2) * 180 / Math.PI).toFixed(1);
@@ -1070,20 +1083,26 @@
           tile.style.setProperty('--s', '1');
           tile.style.setProperty('--rot', rotDeg + 'deg');
         });
-        // Sync content block to circle geometry so it tracks the tiles on every resize.
-        // Safe width = inner chord (diameter minus one tile-width clearance per side).
-        const gap = 14; // px gap between tile edge and content area
-        const safeWidth = Math.max(180, Math.round(2 * r - 2 * (tileSize + gap)));
-        center.style.top      = cy + 'px';
-        center.style.maxWidth = safeWidth + 'px';
 
-        // Scale text to match the container — font size must be derived from safeWidth
-        // (not vw) so it tracks the circle rather than the raw viewport width.
-        // Coefficient 0.115 tuned for Cormorant uppercase with 0.10–0.14em letter-spacing.
-        const titleSize  = Math.max(isTablet ? 22 : 16, Math.round(safeWidth * 0.115));
-        const artistSize = Math.max(10, Math.round(safeWidth * 0.038));
-        center.querySelector('.song-title').style.fontSize  = titleSize  + 'px';
-        center.querySelector('.artist-name').style.fontSize = artistSize + 'px';
+        // Full circle: inscribe content inside the circle with uniform padding.
+        const rInner = r - tileSize / 2 - PAD;
+
+        // Step 1: Set font from inscribed-square side (conservative, constant).
+        const side = rInner * Math.SQRT2;
+        const fs = Math.max(isTablet ? 22 : 16, Math.round(side * 0.115));
+        titleEl.style.fontSize  = fs + 'px';
+        artistEl.style.fontSize = Math.max(10, Math.round(side * 0.038)) + 'px';
+        center.style.top      = cy + 'px';
+        center.style.maxWidth = Math.round(side) + 'px';
+
+        // Step 2: Measure actual height, widen to inscribed rectangle.
+        // (Font stays fixed — only the container width adapts.)
+        const contentH = center.getBoundingClientRect().height;
+        const halfH = contentH / 2;
+        if (halfH < rInner) {
+          const cw = 2 * Math.sqrt(rInner * rInner - halfH * halfH);
+          center.style.maxWidth = Math.round(cw) + 'px';
+        }
       }
     }
     window.addEventListener('resize', () => { if (current === 2) layoutArc(); });

@@ -52,12 +52,12 @@
       overflow: hidden;
     }
 
-    /* Full-page cover art background — behind all screens */
+    /* Full-page background — behind all screens */
     #page-bg {
       position: fixed; inset: 0; z-index: 0;
       background:
         linear-gradient(to bottom, rgba(8,8,8,0.92) 0%, transparent 20%, transparent 76%, rgba(8,8,8,0.92) 100%),
-        url('./cover-art.png') center 55% / cover no-repeat;
+        url('./desktop_bg.png') center center / cover no-repeat;
       opacity: 0.90;
       pointer-events: none;
     }
@@ -271,7 +271,7 @@
 
     .bg-art {
       position: absolute; inset: 0;
-      background: url('./cover-art.png') center 70% / cover no-repeat;
+      background: url('./desktop_bg.png') center center / cover no-repeat;
       opacity: 0.05; pointer-events: none;
     }
     .bg-fade {
@@ -292,7 +292,7 @@
       overflow: hidden;
       cursor: pointer;
       box-shadow: 0 4px 24px rgba(0,0,0,0.6);
-      transform: scale(var(--s, 1));
+      transform: scale(var(--s, 1)) rotate(var(--rot, 0deg));
       transition: transform 0.55s cubic-bezier(0.34, 1.42, 0.64, 1),
                   box-shadow 0.45s ease,
                   opacity 0.6s ease;
@@ -302,7 +302,7 @@
     }
     .arc-tile.show { opacity: 1; }
     .arc-tile:hover {
-      transform: scale(calc(var(--s, 1) * 1.14)) translateY(-9px);
+      transform: scale(calc(var(--s, 1) * 1.14)) rotate(var(--rot, 0deg)) translateY(-9px);
       box-shadow: 0 16px 48px rgba(0,0,0,0.7);
       z-index: 20;
     }
@@ -312,7 +312,7 @@
     /* Center content */
     .arc-center {
       position: absolute;
-      left: 50%; top: 58%;
+      left: 50%; top: 62%;
       transform: translate(-50%, -50%);
       text-align: center;
       width: 100%; max-width: 860px;
@@ -353,7 +353,7 @@
     .cta-wrap { display: flex; flex-direction: column; align-items: center; }
     .cta-swap {
       width: 100%; max-width: 370px;
-      min-height: 210px; /* fixed height so swapping CTAs never shifts the title position */
+      min-height: auto;
       text-align: center;
     }
     .presave-btns {
@@ -546,26 +546,27 @@
     /* ── Tablet (600–1024px) ── */
     @media (max-width: 1024px) {
       .arc-center {
-        padding: 28px 24px;
-        top: 60%;
+        padding: 20px 24px;
+        top: 47%;
       }
-      .cta-swap { max-width: 100%; }
+      .bg-art { display: none; }
+      .cta-swap { max-width: 340px; }
       .song-title { letter-spacing: 0.14em; }
     }
 
     /* ── Phone (≤ 600px) ── */
     @media (max-width: 600px) {
-      .arc-tile { width: 68px; height: 68px; border-radius: 12px; }
+      .arc-tile { width: 42px; height: 42px; border-radius: 8px; }
 
       .arc-center {
-        padding: 20px 18px;
-        top: 60%;
+        padding: 8px 18px;
+        top: 47%;
       }
 
       .song-title {
         font-size: clamp(30px, 7.5vw, 48px);
         letter-spacing: 0.10em;
-        margin-bottom: 10px;
+        margin-bottom: 6px;
       }
 
       .artist-name {
@@ -573,21 +574,17 @@
         letter-spacing: 0.26em;
       }
 
-      .by-line { font-size: 10px; }
+      .by-line { font-size: 10px; margin-top: 4px; }
 
-      .rule { margin: 14px auto; }
+      .rule { display: none; }
 
-      .cta-swap { max-width: 100%; min-height: 170px; }
+      .cta-wrap { margin-top: 20px; }
+      .cta-swap { max-width: 220px; min-height: auto; margin: 0 auto; }
 
-      .email-label { font-size: 9px; letter-spacing: 0.22em; }
+      .email-label { font-size: 7.5px; letter-spacing: 0.10em; margin-bottom: 5px; white-space: nowrap; }
 
-      .email-row { flex-direction: column; }
-      .email-submit {
-        border-left: none;
-        border-top: 1px solid rgba(200,196,188,0.18);
-        text-align: center;
-        padding: 14px;
-      }
+      .email-input { padding: 10px 12px; font-size: 13px; }
+      .email-submit { padding: 10px 12px; font-size: 9px; }
 
       .silence-question { font-size: clamp(13px, 3.6vw, 17px); }
 
@@ -694,6 +691,15 @@
       <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,waterfall?lock=9" alt="" loading="lazy" /></div>
       <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,ocean?lock=10" alt="" loading="lazy" /></div>
       <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,trees?lock=11" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,sunrise?lock=12" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,canyon?lock=13" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,fog?lock=14" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,snow?lock=15" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,clouds?lock=16" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,coast?lock=17" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,wildflower?lock=18" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,glacier?lock=19" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,rainforest?lock=20" alt="" loading="lazy" /></div>
     </div>
 
     <div class="arc-center">
@@ -857,8 +863,8 @@
       boxRunning = true;
       soundBtn.classList.add('visible');
       showVideoBg();
-      // On mobile, always fade out cover art so breathing screen stays clean
-      if (window.innerWidth <= 600) {
+      // Below desktop, fade out cover art so breathing screen stays clean
+      if (window.innerWidth < 1024) {
         const bg = document.getElementById('page-bg');
         bg.style.transition = 'opacity 1.4s ease';
         bg.style.opacity = '0';
@@ -993,8 +999,8 @@
     function enterSong() {
       setProgress(100);
       hideVideoBg();
-      // Only restore cover art background on desktop — on mobile it clashes with content
-      if (window.innerWidth > 600) {
+      // Only restore cover art background on desktop — tablets and below use clean black
+      if (window.innerWidth >= 1024) {
         const bg = document.getElementById('page-bg');
         bg.style.transition = 'opacity 1.4s ease';
         bg.style.opacity = '0.90';
@@ -1014,25 +1020,90 @@
       const canvas = document.getElementById('arc-canvas');
       const tiles  = Array.from(canvas.querySelectorAll('.arc-tile'));
       const W = window.innerWidth, H = window.innerHeight;
-      const isPhone  = W < 600;
-      const isTablet = W >= 600 && W < 1024;
-      const tileSize = isPhone ? 68 : isTablet ? 76 : 88;
-      const cx = W / 2, cy = H * 1.05;
-      const rx = isPhone ? W * 0.36 : isTablet ? W * 0.42 : W * 0.50;
-      const ry = isPhone ? H * 0.88 : H * 0.92;
+      const isDesktop = W >= 1024;
+      const isTablet  = W >= 600 && W < 1024;
+      const tileSize  = isDesktop ? 88 : isTablet ? 64 : 42;
       const n = tiles.length;
-      tiles.forEach((tile, i) => {
-        const t     = n === 1 ? 0.5 : i / (n - 1);
-        const angle = -Math.PI + t * Math.PI;
-        const x = cx + rx * Math.cos(angle) - tileSize / 2;
-        const y = cy + ry * Math.sin(angle) - tileSize / 2;
-        tile.style.width  = tileSize + 'px';
-        tile.style.height = tileSize + 'px';
-        tile.style.left   = x + 'px';
-        tile.style.top    = y + 'px';
-        const dist = Math.abs(t - 0.5) * 2;
-        tile.style.setProperty('--s', (1 - dist * 0.15).toFixed(3));
-      });
+      const cx = W / 2;
+      const center   = document.querySelector('.arc-center');
+      const titleEl  = center.querySelector('.song-title');
+      const artistEl = center.querySelector('.artist-name');
+      const PAD = 20; // uniform gap between inner tile edge and content edge
+
+      if (isDesktop) {
+        const r  = Math.max(W * 0.55, H * 0.90);
+        const cy = H + tileSize * 0.6;
+        tiles.forEach((tile, i) => {
+          const t     = n === 1 ? 0.5 : i / (n - 1);
+          const angle = -Math.PI + t * Math.PI;
+          const x = cx + r * Math.cos(angle) - tileSize / 2;
+          const y = cy + r * Math.sin(angle) - tileSize / 2;
+          const rotDeg = ((angle + Math.PI / 2) * 180 / Math.PI).toFixed(1);
+          tile.style.width  = tileSize + 'px';
+          tile.style.height = tileSize + 'px';
+          tile.style.left   = x + 'px';
+          tile.style.top    = y + 'px';
+          tile.style.setProperty('--s', '1');
+          tile.style.setProperty('--rot', rotDeg + 'deg');
+        });
+
+        // Inscribe content inside the arc with uniform padding from tiles.
+        // rInner = distance from circle centre to inner edge of tiles, minus gap.
+        const rInner = r - tileSize / 2 - PAD;
+
+        // Step 1: Set font from rInner (constant — avoids oscillation).
+        const fs = Math.max(32, Math.min(84, Math.round(rInner * 0.11)));
+        titleEl.style.fontSize  = fs + 'px';
+        artistEl.style.fontSize = Math.max(12, Math.round(fs * 0.22)) + 'px';
+        center.style.top = '68%'; // lower than default 62% — gives wider chord at content top
+
+        // Step 2: Set generous width, measure, compute chord at content top.
+        // Two passes so the reflow from the first width adjustment is accounted for.
+        let cw = 860;
+        for (let pass = 0; pass < 2; pass++) {
+          center.style.maxWidth = Math.round(cw) + 'px';
+          const dy = cy - center.getBoundingClientRect().top;
+          if (dy >= rInner) { cw = Math.round(rInner * 0.7); }
+          else { cw = Math.min(860, 2 * Math.sqrt(rInner * rInner - dy * dy)); }
+        }
+        center.style.maxWidth = Math.round(cw) + 'px';
+
+      } else {
+        const r  = isTablet ? Math.min(W * 0.38, H * 0.34) : H * 0.22;
+        const cy = H * 0.47;
+        tiles.forEach((tile, i) => {
+          const angle = (i / n) * 2 * Math.PI - Math.PI / 2;
+          const x = cx + r * Math.cos(angle) - tileSize / 2;
+          const y = cy + r * Math.sin(angle) - tileSize / 2;
+          const rotDeg = ((angle + Math.PI / 2) * 180 / Math.PI).toFixed(1);
+          tile.style.width  = tileSize + 'px';
+          tile.style.height = tileSize + 'px';
+          tile.style.left   = x + 'px';
+          tile.style.top    = y + 'px';
+          tile.style.setProperty('--s', '1');
+          tile.style.setProperty('--rot', rotDeg + 'deg');
+        });
+
+        // Full circle: inscribe content inside the circle with uniform padding.
+        const rInner = r - tileSize / 2 - PAD;
+
+        // Step 1: Set font from inscribed-square side (conservative, constant).
+        const side = rInner * Math.SQRT2;
+        const fs = Math.max(isTablet ? 22 : 16, Math.round(side * 0.115));
+        titleEl.style.fontSize  = fs + 'px';
+        artistEl.style.fontSize = Math.max(10, Math.round(side * 0.038)) + 'px';
+        center.style.top      = cy + 'px';
+        center.style.maxWidth = Math.round(side) + 'px';
+
+        // Step 2: Measure actual height, widen to inscribed rectangle.
+        // (Font stays fixed — only the container width adapts.)
+        const contentH = center.getBoundingClientRect().height;
+        const halfH = contentH / 2;
+        if (halfH < rInner) {
+          const cw = 2 * Math.sqrt(rInner * rInner - halfH * halfH);
+          center.style.maxWidth = Math.round(cw) + 'px';
+        }
+      }
     }
     window.addEventListener('resize', () => { if (current === 2) layoutArc(); });
 
