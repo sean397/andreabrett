@@ -292,7 +292,7 @@
       overflow: hidden;
       cursor: pointer;
       box-shadow: 0 4px 24px rgba(0,0,0,0.6);
-      transform: scale(var(--s, 1));
+      transform: scale(var(--s, 1)) rotate(var(--rot, 0deg));
       transition: transform 0.55s cubic-bezier(0.34, 1.42, 0.64, 1),
                   box-shadow 0.45s ease,
                   opacity 0.6s ease;
@@ -302,7 +302,7 @@
     }
     .arc-tile.show { opacity: 1; }
     .arc-tile:hover {
-      transform: scale(calc(var(--s, 1) * 1.14)) translateY(-9px);
+      transform: scale(calc(var(--s, 1) * 1.14)) rotate(var(--rot, 0deg)) translateY(-9px);
       box-shadow: 0 16px 48px rgba(0,0,0,0.7);
       z-index: 20;
     }
@@ -555,11 +555,11 @@
 
     /* ── Phone (≤ 600px) ── */
     @media (max-width: 600px) {
-      .arc-tile { width: 68px; height: 68px; border-radius: 12px; }
+      .arc-tile { width: 46px; height: 46px; border-radius: 9px; }
 
       .arc-center {
         padding: 20px 18px;
-        top: 60%;
+        top: 50%;
       }
 
       .song-title {
@@ -694,6 +694,15 @@
       <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,waterfall?lock=9" alt="" loading="lazy" /></div>
       <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,ocean?lock=10" alt="" loading="lazy" /></div>
       <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,trees?lock=11" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,sunrise?lock=12" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,canyon?lock=13" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,fog?lock=14" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,snow?lock=15" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,clouds?lock=16" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,coast?lock=17" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,wildflower?lock=18" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,glacier?lock=19" alt="" loading="lazy" /></div>
+      <div class="arc-tile"><img src="https://loremflickr.com/300/300/nature,rainforest?lock=20" alt="" loading="lazy" /></div>
     </div>
 
     <div class="arc-center">
@@ -1016,23 +1025,45 @@
       const W = window.innerWidth, H = window.innerHeight;
       const isPhone  = W < 600;
       const isTablet = W >= 600 && W < 1024;
-      const tileSize = isPhone ? 68 : isTablet ? 76 : 88;
-      const cx = W / 2, cy = H * 1.05;
-      const rx = isPhone ? W * 0.36 : isTablet ? W * 0.42 : W * 0.50;
-      const ry = isPhone ? H * 0.88 : H * 0.92;
+      const tileSize = isPhone ? 46 : isTablet ? 76 : 88;
       const n = tiles.length;
-      tiles.forEach((tile, i) => {
-        const t     = n === 1 ? 0.5 : i / (n - 1);
-        const angle = -Math.PI + t * Math.PI;
-        const x = cx + rx * Math.cos(angle) - tileSize / 2;
-        const y = cy + ry * Math.sin(angle) - tileSize / 2;
-        tile.style.width  = tileSize + 'px';
-        tile.style.height = tileSize + 'px';
-        tile.style.left   = x + 'px';
-        tile.style.top    = y + 'px';
-        const dist = Math.abs(t - 0.5) * 2;
-        tile.style.setProperty('--s', (1 - dist * 0.15).toFixed(3));
-      });
+
+      if (isPhone) {
+        // Full circle — radius larger than half-screen width so tiles bleed off edges (matching reference)
+        const cx = W / 2, cy = H * 0.48;
+        const r  = W * 0.56;   // ≈210px on 375px screen; tiles at 3/9 o'clock bleed off edges
+        tiles.forEach((tile, i) => {
+          const angle = (i / n) * 2 * Math.PI - Math.PI / 2;
+          const x = cx + r * Math.cos(angle) - tileSize / 2;
+          const y = cy + r * Math.sin(angle) - tileSize / 2;
+          const rotDeg = ((angle + Math.PI / 2) * 180 / Math.PI).toFixed(1);
+          tile.style.width  = tileSize + 'px';
+          tile.style.height = tileSize + 'px';
+          tile.style.left   = x + 'px';
+          tile.style.top    = y + 'px';
+          tile.style.setProperty('--s', '1');
+          tile.style.setProperty('--rot', rotDeg + 'deg');
+        });
+      } else {
+        // Top semicircle for desktop / tablet
+        const cx = W / 2, cy = H * 1.05;
+        const rx = isTablet ? W * 0.42 : W * 0.50;
+        const ry = H * 0.92;
+        tiles.forEach((tile, i) => {
+          const t     = n === 1 ? 0.5 : i / (n - 1);
+          const angle = -Math.PI + t * Math.PI;
+          const x = cx + rx * Math.cos(angle) - tileSize / 2;
+          const y = cy + ry * Math.sin(angle) - tileSize / 2;
+          const rotDeg = ((angle + Math.PI / 2) * 180 / Math.PI).toFixed(1);
+          tile.style.width  = tileSize + 'px';
+          tile.style.height = tileSize + 'px';
+          tile.style.left   = x + 'px';
+          tile.style.top    = y + 'px';
+          const dist = Math.abs(t - 0.5) * 2;
+          tile.style.setProperty('--s', (1 - dist * 0.15).toFixed(3));
+          tile.style.setProperty('--rot', rotDeg + 'deg');
+        });
+      }
     }
     window.addEventListener('resize', () => { if (current === 2) layoutArc(); });
 
