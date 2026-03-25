@@ -1026,6 +1026,8 @@
       const n = tiles.length;
       const cx = W / 2;
 
+      const center = document.querySelector('.arc-center');
+
       if (isDesktop) {
         // True circle — large enough radius so tiles always clear the central content.
         // Circle centre sits just below the fold; only the upper semicircle is visible.
@@ -1044,6 +1046,9 @@
           tile.style.setProperty('--s', '1');
           tile.style.setProperty('--rot', rotDeg + 'deg');
         });
+        // Revert to CSS defaults on desktop
+        center.style.top      = '';
+        center.style.maxWidth = '';
       } else {
         // Full true circle.
         // Both tablet and phone: radius keeps tiles clear of the content block.
@@ -1063,6 +1068,12 @@
           tile.style.setProperty('--s', '1');
           tile.style.setProperty('--rot', rotDeg + 'deg');
         });
+        // Sync content block to circle geometry so it tracks the tiles on every resize.
+        // Safe width = inner chord (diameter minus one tile-width clearance per side).
+        const gap = 14; // px gap between tile edge and content area
+        const safeWidth = Math.max(180, Math.round(2 * r - 2 * (tileSize + gap)));
+        center.style.top      = cy + 'px';
+        center.style.maxWidth = safeWidth + 'px';
       }
     }
     window.addEventListener('resize', () => { if (current === 2) layoutArc(); });
