@@ -1029,10 +1029,13 @@
         bg.style.opacity = '0.90';
       }
       layoutArc();
-      // Stagger tile reveals
-      document.querySelectorAll('.arc-tile').forEach((t, i) => {
+      // Stagger tile reveals, then start orbit animation
+      const arcTiles = document.querySelectorAll('.arc-tile');
+      arcTiles.forEach((t, i) => {
         setTimeout(() => t.classList.add('show'), i * 80);
       });
+      // Start orbit after all tiles have appeared
+      setTimeout(() => startOrbit(), arcTiles.length * 80 + 400);
       // Reveal center content
       document.querySelectorAll('#screen-song .reveal').forEach(el => {
         el.classList.add('show');
@@ -1206,7 +1209,70 @@
         }
       }
     }
-    window.addEventListener('resize', () => { if (current === 2) layoutArc(); });
+    window.addEventListener('resize', () => { if (current === 2) { layoutArc(); startOrbit(); } });
+
+    // ─── Tile orbit animation ────────────────────────────────────
+    // Tiles continuously rotate around the circle.
+    // Stores geometry from layoutArc() so the animation loop can reposition tiles.
+    let orbitState = null;  // { r, cx, cy, tileSize, n, isDesktop, tiles }
+    let orbitRAF = null;
+    const ORBIT_PERIOD = 90; // seconds for one full revolution
+
+    function startOrbit() {
+      if (orbitRAF) cancelAnimationFrame(orbitRAF);
+      const canvas = document.getElementById('arc-canvas');
+      const tiles  = Array.from(canvas.querySelectorAll('.arc-tile'));
+      const W = window.innerWidth, H = window.innerHeight;
+      const isDesktop = W >= 1024;
+      const isTablet  = W >= 600 && W < 1024;
+      const tileSize  = isDesktop ? 88 : isTablet ? 64 : 42;
+      const n = tiles.length;
+      const cx = W / 2;
+      let r, cy;
+      if (isDesktop) {
+        r  = Math.max(W * 0.55, H * 0.90);
+        cy = H + tileSize * 0.6;
+      } else {
+        r  = isTablet ? Math.min(W * 0.38, H * 0.34) : H * 0.22;
+        cy = H * 0.47;
+      }
+      orbitState = { r, cx, cy, tileSize, n, isDesktop, tiles };
+
+      const startTime = performance.now();
+      function tick(now) {
+        if (current !== 2) { orbitRAF = null; return; } // stop when leaving song screen
+        const s = orbitState;
+        const elapsed = (now - startTime) / 1000; // seconds
+        const angleOffset = (elapsed / ORBIT_PERIOD) * 2 * Math.PI;
+
+        s.tiles.forEach((tile, i) => {
+          let angle;
+          if (s.isDesktop) {
+            // Semicircle: tiles spread from -π to 0, offset wraps within that range
+            const baseT = s.n === 1 ? 0.5 : i / (s.n - 1);
+            angle = -Math.PI + baseT * Math.PI + angleOffset;
+            // Keep tiles in the visible semicircle range — wrap using modular arithmetic
+            // Map angle into [-π, 0] wouldn't work for continuous rotation,
+            // so let them orbit the full circle but only show the semicircle portion.
+          } else {
+            // Full circle: evenly spaced, all rotate together
+            angle = (i / s.n) * 2 * Math.PI - Math.PI / 2 + angleOffset;
+          }
+          const x = s.cx + s.r * Math.cos(angle) - s.tileSize / 2;
+          const y = s.cy + s.r * Math.sin(angle) - s.tileSize / 2;
+          const rotDeg = ((angle + Math.PI / 2) * 180 / Math.PI).toFixed(1);
+          tile.style.left = x + 'px';
+          tile.style.top  = y + 'px';
+          tile.style.setProperty('--rot', rotDeg + 'deg');
+        });
+        orbitRAF = requestAnimationFrame(tick);
+      }
+      orbitRAF = requestAnimationFrame(tick);
+    }
+
+    function stopOrbit() {
+      if (orbitRAF) { cancelAnimationFrame(orbitRAF); orbitRAF = null; }
+    }
 
     // ─── Sound toggle ─────────────────────────────────────────────
     function tryPlayAudio() {
