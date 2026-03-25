@@ -605,9 +605,13 @@
 
       #page-bg {
         background:
-          linear-gradient(to bottom, rgba(8,8,8,0.55) 0%, transparent 18%, transparent 78%, rgba(8,8,8,0.75) 100%),
-          url('./cover-art.png') center center / cover no-repeat;
+          linear-gradient(to bottom, rgba(8,8,8,0.90) 0%, rgba(8,8,8,0.5) 15%, transparent 30%, transparent 70%, rgba(8,8,8,0.85) 100%),
+          url('./mobile_bg.png') center center / cover no-repeat;
       }
+
+      /* Hide the secondary cover art layer inside the song screen on mobile —
+         it duplicates the global #page-bg and causes the overflow text */
+      .bg-art { display: none; }
     }
   </style>
 </head>
@@ -989,10 +993,12 @@
     function enterSong() {
       setProgress(100);
       hideVideoBg();
-      // Restore cover art background when entering song screen
-      const bg = document.getElementById('page-bg');
-      bg.style.transition = 'opacity 1.4s ease';
-      bg.style.opacity = '0.90';
+      // Only restore cover art background on desktop — on mobile it clashes with content
+      if (window.innerWidth > 600) {
+        const bg = document.getElementById('page-bg');
+        bg.style.transition = 'opacity 1.4s ease';
+        bg.style.opacity = '0.90';
+      }
       layoutArc();
       // Stagger tile reveals
       document.querySelectorAll('.arc-tile').forEach((t, i) => {
@@ -1012,7 +1018,7 @@
       const isTablet = W >= 600 && W < 1024;
       const tileSize = isPhone ? 68 : isTablet ? 76 : 88;
       const cx = W / 2, cy = H * 1.05;
-      const rx = isPhone ? W * 0.40 : isTablet ? W * 0.42 : W * 0.50;
+      const rx = isPhone ? W * 0.36 : isTablet ? W * 0.42 : W * 0.50;
       const ry = isPhone ? H * 0.88 : H * 0.92;
       const n = tiles.length;
       tiles.forEach((tile, i) => {
