@@ -1,0 +1,9 @@
+.DS_Store
+.claude/
+.netlify/
+images/300ppi/
+touvlo/
+*.wav
+*.mp3
+cover-art.png
+v2-launch.html
