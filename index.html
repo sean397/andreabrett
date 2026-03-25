@@ -1046,9 +1046,10 @@
         });
       } else {
         // Full true circle.
-        // Phone: radius = H*0.36 so 3/9 o'clock tiles go off-screen; content sits cleanly inside.
-        // Tablet: radius = min(W,H)*0.38 to fill the viewport nicely.
-        const r  = isTablet ? Math.min(W * 0.40, H * 0.38) : H * 0.36;
+        // Phone: radius sized so tiles sit ~70px from the content edges; side tiles
+        // bleed just off screen edges giving the immersive full-circle look.
+        // Tablet: radius fills the viewport without tiles overflowing.
+        const r  = isTablet ? Math.min(W * 0.40, H * 0.38) : H * 0.22;
         const cy = H * 0.47;
         tiles.forEach((tile, i) => {
           const angle = (i / n) * 2 * Math.PI - Math.PI / 2; // start at 12 o'clock
