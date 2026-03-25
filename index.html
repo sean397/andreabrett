@@ -329,6 +329,7 @@
     .d4 { transition-delay: 1.0s; }
     .d5 { transition-delay: 1.3s; }
 
+    .line-nowrap { white-space: nowrap; }
     .song-title {
       font-family: 'Cormorant', serif; font-weight: 300;
       font-size: clamp(36px, 6.5vw, 84px);
@@ -703,16 +704,16 @@
     </div>
 
     <div class="arc-center">
-      <div class="reveal d1"><h1 class="song-title">A Moment<br>of Silence</h1></div>
+      <div class="reveal d1"><h1 class="song-title"><span class="line-nowrap">A Moment</span><br><span class="line-nowrap">of Silence</span></h1></div>
       <div class="reveal d2">
-        <p class="artist-name">Isaiah Bailey</p>
-        <p class="by-line">Written by Andrea Brett</p>
+        <p class="artist-name line-nowrap">Isaiah Bailey</p>
+        <p class="by-line line-nowrap">Written by Andrea Brett</p>
       </div>
       <div class="rule reveal d3"></div>
       <div class="cta-wrap reveal d4">
         <div class="cta-swap">
           <div id="email-section">
-            <label class="email-label" for="email-input">Pre-save — get notified on release day</label>
+            <label class="email-label line-nowrap" for="email-input">Get notified on release day</label>
             <div class="email-row" id="email-row">
               <input id="email-input" type="email" class="email-input" placeholder="your@email.com" autocomplete="email" />
               <button class="email-submit" id="email-submit">Pre-save</button>
@@ -1048,23 +1049,46 @@
         });
 
         // Inscribe content inside the arc with uniform padding from tiles.
-        // rInner = distance from circle centre to inner edge of tiles, minus gap.
         const rInner = r - tileSize / 2 - PAD;
+        center.style.top = '68%';
 
-        // Step 1: Set font from rInner (constant — avoids oscillation).
-        const fs = Math.max(32, Math.min(84, Math.round(rInner * 0.11)));
+        // Step 1: Measure widest nowrap title line at reference size.
+        // Only measure inline spans inside the title (block elements report container width).
+        const REF_FS = 80;
+        titleEl.style.fontSize = REF_FS + 'px';
+        center.style.maxWidth = 'none';
+        const padH = parseFloat(getComputedStyle(center).paddingLeft)
+                    + parseFloat(getComputedStyle(center).paddingRight);
+        const titleSpans = Array.from(titleEl.querySelectorAll('.line-nowrap'));
+        let maxLineW = 0;
+        titleSpans.forEach(el => {
+          maxLineW = Math.max(maxLineW, el.getBoundingClientRect().width);
+        });
+
+        // Step 2: Compute chord at content top, scale font to fit.
+        // Initial generous width to position content and measure dy.
+        let cw = Math.min(860, 2 * rInner);
+        center.style.maxWidth = cw + 'px';
+        titleEl.style.fontSize = Math.round(rInner * 0.11) + 'px'; // temp for position
+        const dy = cy - center.getBoundingClientRect().top;
+        if (dy < rInner) {
+          cw = Math.min(860, 2 * Math.sqrt(rInner * rInner - dy * dy));
+        }
+        // Scale font so widest nowrap line fits in chord minus padding (8% safety margin)
+        const availW = (cw - padH) * 0.92;
+        let fs = Math.max(32, Math.min(84, Math.floor(REF_FS * availW / maxLineW)));
         titleEl.style.fontSize  = fs + 'px';
         artistEl.style.fontSize = Math.max(12, Math.round(fs * 0.22)) + 'px';
-        center.style.top = '68%'; // lower than default 62% — gives wider chord at content top
 
-        // Step 2: Set generous width, measure, compute chord at content top.
-        // Two passes so the reflow from the first width adjustment is accounted for.
-        let cw = 860;
-        for (let pass = 0; pass < 2; pass++) {
-          center.style.maxWidth = Math.round(cw) + 'px';
-          const dy = cy - center.getBoundingClientRect().top;
-          if (dy >= rInner) { cw = Math.round(rInner * 0.7); }
-          else { cw = Math.min(860, 2 * Math.sqrt(rInner * rInner - dy * dy)); }
+        // Re-measure with correct font and re-compute chord
+        center.style.maxWidth = cw + 'px';
+        const dy2 = cy - center.getBoundingClientRect().top;
+        if (dy2 < rInner) {
+          cw = Math.min(860, 2 * Math.sqrt(rInner * rInner - dy2 * dy2));
+          const availW2 = (cw - padH) * 0.92;
+          fs = Math.max(32, Math.min(84, Math.floor(REF_FS * availW2 / maxLineW)));
+          titleEl.style.fontSize  = fs + 'px';
+          artistEl.style.fontSize = Math.max(12, Math.round(fs * 0.22)) + 'px';
         }
         center.style.maxWidth = Math.round(cw) + 'px';
 
@@ -1086,22 +1110,77 @@
 
         // Full circle: inscribe content inside the circle with uniform padding.
         const rInner = r - tileSize / 2 - PAD;
+        center.style.top = cy + 'px';
 
-        // Step 1: Set font from inscribed-square side (conservative, constant).
-        const side = rInner * Math.SQRT2;
-        const fs = Math.max(isTablet ? 22 : 16, Math.round(side * 0.115));
-        titleEl.style.fontSize  = fs + 'px';
-        artistEl.style.fontSize = Math.max(10, Math.round(side * 0.038)) + 'px';
-        center.style.top      = cy + 'px';
-        center.style.maxWidth = Math.round(side) + 'px';
+        // Hide rule in full-circle mode to save vertical space.
+        const ruleEl = center.querySelector('.rule');
+        if (ruleEl) ruleEl.style.display = 'none';
 
-        // Step 2: Measure actual height, widen to inscribed rectangle.
-        // (Font stays fixed — only the container width adapts.)
-        const contentH = center.getBoundingClientRect().height;
-        const halfH = contentH / 2;
-        if (halfH < rInner) {
-          const cw = 2 * Math.sqrt(rInner * rInner - halfH * halfH);
-          center.style.maxWidth = Math.round(cw) + 'px';
+        // Step 1: Measure widest nowrap line at a reference font size.
+        // Lines have white-space:nowrap so they never break.
+        const REF_FS = 60; // reference size to measure natural widths
+        titleEl.style.fontSize = REF_FS + 'px';
+        const padH = parseFloat(getComputedStyle(center).paddingLeft)
+                    + parseFloat(getComputedStyle(center).paddingRight);
+        center.style.maxWidth = 'none';
+        // Measure widest title span (inline elements only — block p's report container width)
+        const titleSpans = Array.from(titleEl.querySelectorAll('.line-nowrap'));
+        let maxLineW = 0;
+        titleSpans.forEach(el => {
+          maxLineW = Math.max(maxLineW, el.getBoundingClientRect().width);
+        });
+
+        // Step 2: Compute the font scale so widest line fits inside the circle.
+        // Available content width = chord at content half-height, minus padding.
+        // Start with full diameter as initial width, then iterate.
+        // Scale = availableWidth / maxLineW (at reference font).
+        // But first need actual height, which depends on font. Use two passes:
+        // Pass A: rough scale from diameter
+        const diameterW = 2 * rInner;
+        let scale = ((diameterW - padH) * 0.92) / maxLineW;
+        let fs = Math.max(isTablet ? 14 : 10, Math.round(REF_FS * scale));
+
+        // Apply font sizes proportionally
+        titleEl.style.fontSize = fs + 'px';
+        const byLine    = center.querySelector('.by-line');
+        const emailLbl  = center.querySelector('.email-label');
+        const emailInp  = center.querySelector('.email-input');
+        const emailBtn  = center.querySelector('.email-submit');
+        const ctaWrap   = center.querySelector('.cta-wrap');
+        if (artistEl) artistEl.style.fontSize = Math.max(8, Math.round(fs * 0.28)) + 'px';
+        if (byLine)   byLine.style.fontSize   = Math.max(7, Math.round(fs * 0.24)) + 'px';
+        if (emailLbl) emailLbl.style.fontSize  = Math.max(6, Math.round(fs * 0.20)) + 'px';
+        if (emailInp) emailInp.style.fontSize  = Math.max(10, Math.round(fs * 0.30)) + 'px';
+        if (emailInp) emailInp.style.padding   = Math.round(fs * 0.22) + 'px ' + Math.round(fs * 0.28) + 'px';
+        if (emailBtn) emailBtn.style.fontSize  = Math.max(6, Math.round(fs * 0.18)) + 'px';
+        if (emailBtn) emailBtn.style.padding   = Math.round(fs * 0.22) + 'px ' + Math.round(fs * 0.28) + 'px';
+        if (ctaWrap)  ctaWrap.style.marginTop  = Math.round(fs * 0.35) + 'px';
+        titleEl.style.marginBottom = Math.round(fs * 0.28) + 'px';
+
+        // Pass B: measure actual content height, compute inscribed rectangle chord,
+        // then re-scale if chord is narrower than current width.
+        center.style.maxWidth = Math.round(diameterW) + 'px';
+        for (let pass = 0; pass < 3; pass++) {
+          const measuredH = center.getBoundingClientRect().height;
+          const halfH = measuredH / 2;
+          if (halfH >= rInner) { break; }
+          const chordW = 2 * Math.sqrt(rInner * rInner - halfH * halfH);
+          const availW = (chordW - padH) * 0.92;
+          if (availW < maxLineW * (fs / REF_FS)) {
+            // Need to shrink font to fit widest line in chord
+            fs = Math.max(isTablet ? 14 : 10, Math.floor(REF_FS * availW / maxLineW));
+            titleEl.style.fontSize = fs + 'px';
+            if (artistEl) artistEl.style.fontSize = Math.max(8, Math.round(fs * 0.28)) + 'px';
+            if (byLine)   byLine.style.fontSize   = Math.max(7, Math.round(fs * 0.24)) + 'px';
+            if (emailLbl) emailLbl.style.fontSize  = Math.max(6, Math.round(fs * 0.20)) + 'px';
+            if (emailInp) emailInp.style.fontSize  = Math.max(10, Math.round(fs * 0.30)) + 'px';
+            if (emailInp) emailInp.style.padding   = Math.round(fs * 0.22) + 'px ' + Math.round(fs * 0.28) + 'px';
+            if (emailBtn) emailBtn.style.fontSize  = Math.max(6, Math.round(fs * 0.18)) + 'px';
+            if (emailBtn) emailBtn.style.padding   = Math.round(fs * 0.22) + 'px ' + Math.round(fs * 0.28) + 'px';
+            if (ctaWrap)  ctaWrap.style.marginTop  = Math.round(fs * 0.35) + 'px';
+            titleEl.style.marginBottom = Math.round(fs * 0.28) + 'px';
+          }
+          center.style.maxWidth = Math.round(chordW) + 'px';
         }
       }
     }
