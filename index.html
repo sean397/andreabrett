@@ -85,21 +85,6 @@
     }
 
     /* ══════════════════════════════════════════════
-       PROGRESS BAR
-    ══════════════════════════════════════════════ */
-    #progress-bar {
-      position: fixed; top: 0; left: 0; right: 0;
-      height: 1px; z-index: 500;
-      background: rgba(200,196,188,0.08);
-    }
-    #progress-fill {
-      height: 100%;
-      background: rgba(200,196,188,0.45);
-      width: 0%;
-      transition: width 0.4s ease;
-    }
-
-    /* ══════════════════════════════════════════════
        SOUND TOGGLE
     ══════════════════════════════════════════════ */
     #sound-toggle {
@@ -136,153 +121,6 @@
       transition: opacity 1.4s ease;
     }
     .screen.active { opacity: 1; pointer-events: all; }
-
-    /* ══════════════════════════════════════════════
-       SCREEN 1 — Arrival
-    ══════════════════════════════════════════════ */
-    #screen-arrival .arrival-line {
-      font-family: 'Touvlo', sans-serif;
-      font-weight: 100;
-      font-size: clamp(42px, 9vw, 110px);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--white);
-      text-align: center;
-      line-height: 1.1;
-      padding: 0 32px;
-      opacity: 0;
-      transition: opacity 2s ease;
-    }
-    #screen-arrival .arrival-line.show { opacity: 1; }
-
-    .skip-hint {
-      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-      font-size: 13px; letter-spacing: 0.28em; text-transform: uppercase;
-      color: transparent; cursor: pointer; background: none; border: none;
-      transition: color 0.8s ease; white-space: nowrap;
-      font-family: 'Touvlo', sans-serif;
-    }
-    .skip-hint.show { color: rgba(255,255,255,0.6); }
-    .skip-hint:hover { color: rgba(255,255,255,0.9) !important; }
-
-    /* ══════════════════════════════════════════════
-       SCREEN 2 — Box breathing moment
-    ══════════════════════════════════════════════ */
-    #screen-breath {
-      gap: 0;
-    }
-
-    .breath-title {
-      font-family: 'Touvlo', sans-serif;
-      font-weight: 100;
-      font-size: clamp(30px, 5.5vw, 64px);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--white);
-      text-align: center;
-      line-height: 1.1;
-      padding: 0 24px;
-      margin-bottom: 44px;
-      opacity: 0;
-      transition: opacity 1.8s ease;
-    }
-    .breath-title.show { opacity: 1; }
-
-    .box-breath-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 40px;
-    }
-
-    .box-breath-container {
-      position: relative;
-      width: clamp(160px, 28vw, 220px);
-      height: clamp(160px, 28vw, 220px);
-    }
-
-    .box-breath-outline {
-      position: absolute; inset: 0;
-      border: 1.5px solid rgba(200,196,188,0.45);
-    }
-
-    .box-side { position: absolute; background: var(--off-white); }
-    /* Anchor each side so it grows toward where the dot is heading */
-    .box-side-top    { top: -1px;    left: 0;    height: 2px; width: 0%; }   /* grows right */
-    .box-side-right  { top: 0;       right: -1px; width: 2px; height: 0%; }  /* grows down  */
-    .box-side-bottom { bottom: -1px; right: 0;   height: 2px; width: 0%; }   /* grows left  */
-    .box-side-left   { bottom: 0;    left: -1px;  width: 2px; height: 0%; }  /* grows up    */
-
-    .box-dot {
-      position: absolute;
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--white);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 10;
-      box-shadow: 0 0 8px rgba(245,242,237,0.8);
-    }
-
-    /* Phase word — centered inside the box, like reference */
-    .box-phase-word {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      font-family: 'Touvlo', sans-serif;
-      font-weight: 300; font-style: italic;
-      font-size: clamp(26px, 4.5vw, 40px);
-      letter-spacing: 0.03em;
-      color: var(--white);
-      white-space: nowrap;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 1s ease;
-    }
-    .box-phase-word.show { opacity: 1; }
-
-    /* Countdown — subtle, below box */
-    .box-countdown {
-      margin-top: 16px;
-      font-family: 'Touvlo', sans-serif;
-      font-weight: 300;
-      font-size: 20px;
-      letter-spacing: 0.28em;
-      color: rgba(255,255,255,0.6);
-      text-align: center;
-      height: 1.4em;
-      min-width: 2em;
-    }
-
-    /* Breathing cycle progress bar */
-    .breath-progress-track {
-      width: clamp(160px, 28vw, 220px);
-      height: 2px;
-      background: rgba(200,196,188,0.18);
-      margin-top: 22px;
-    }
-    .breath-progress-fill {
-      height: 100%;
-      background: rgba(200,196,188,0.65);
-      width: 0%;
-    }
-
-    /* ══════════════════════════════════════════════
-       SCREEN 3 — Bridge
-    ══════════════════════════════════════════════ */
-    #screen-bridge .bridge-line {
-      font-family: 'Touvlo', sans-serif;
-      font-weight: 300; font-style: italic;
-      font-size: clamp(18px, 3vw, 32px);
-      letter-spacing: 0.04em;
-      color: var(--off-white);
-      text-align: center;
-      max-width: 520px;
-      padding: 0 24px;
-      opacity: 0;
-      transition: opacity 1.6s ease;
-    }
-    #screen-bridge .bridge-line.show { opacity: 1; }
 
     /* ══════════════════════════════════════════════
        SCREEN 4 — Song + Arc + CTA
@@ -550,22 +388,6 @@
     .modal-btn-no:hover { color: var(--off-white); }
     .modal-confirm { display: none; font-style: italic; font-size: 16px; color: rgba(200,196,188,0.6); line-height: 1.6; }
 
-    /* ══════════════════════════════════════════════
-       VIDEO BACKGROUND (breath screen, ?bg=video)
-    ══════════════════════════════════════════════ */
-    #breath-video-bg {
-      position: absolute; inset: 0; z-index: 0;
-      overflow: hidden; pointer-events: none;
-      opacity: 0; transition: opacity 1.4s ease;
-    }
-    #breath-video-bg.show { opacity: 1; }
-    #breath-video-bg video {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      filter: grayscale(100%);
-      opacity: 0.2;
-    }
-
     /* ── Tablet (600–1024px) ── */
     @media (max-width: 1024px) {
       .arc-center {
@@ -611,18 +433,6 @@
 
       .silence-question { font-size: clamp(13px, 3.6vw, 17px); }
 
-      .breath-title {
-        font-size: clamp(24px, 6vw, 38px);
-        margin-bottom: 28px;
-      }
-
-      .box-breath-container {
-        width: clamp(130px, 36vw, 170px);
-        height: clamp(130px, 36vw, 170px);
-      }
-
-      .breath-progress-track { width: clamp(130px, 36vw, 170px); }
-
       #page-bg {
         background:
           linear-gradient(to bottom, rgba(8,8,8,0.90) 0%, rgba(8,8,8,0.5) 15%, transparent 30%, transparent 70%, rgba(8,8,8,0.85) 100%),
@@ -642,9 +452,6 @@
   <!-- Cover art background -->
   <div id="page-bg"></div>
 
-  <!-- Progress bar -->
-  <div id="progress-bar"><div id="progress-fill"></div></div>
-
   <!-- Sound toggle -->
   <button id="sound-toggle" aria-label="Toggle sound">
     <div class="sound-icon">
@@ -661,44 +468,8 @@
     <span class="sound-label" id="sound-label">Sound on</span>
   </button>
 
-  <!-- ═══ SCREEN 1: Arrival ═══ -->
-  <div class="screen" id="screen-arrival">
-    <p class="arrival-line" id="arrival-line">Take a Moment<br>of Silence</p>
-    <button class="skip-hint" id="skip-arrival">continue</button>
-  </div>
-
-  <!-- ═══ SCREEN 2: Breathing ═══ -->
-  <div class="screen" id="screen-breath">
-    <div id="breath-video-bg">
-      <video id="breath-video" muted playsinline preload="auto"></video>
-    </div>
-    <p class="breath-title">Take a Moment<br>of Silence</p>
-    <div class="box-breath-wrap">
-      <div class="box-breath-container" id="box-breath-container">
-        <div class="box-breath-outline"></div>
-        <div class="box-side box-side-top"></div>
-        <div class="box-side box-side-right"></div>
-        <div class="box-side box-side-bottom"></div>
-        <div class="box-side box-side-left"></div>
-        <div class="box-dot" id="box-dot"></div>
-        <div class="box-phase-word" id="box-phase-word"></div>
-      </div>
-      <div class="box-countdown" id="box-countdown"></div>
-      <div class="breath-progress-track">
-        <div class="breath-progress-fill" id="breath-progress-fill"></div>
-      </div>
-    </div>
-    <button class="skip-hint" id="skip-breath" style="bottom:140px;position:fixed">skip</button>
-  </div>
-
-  <!-- ═══ SCREEN 3: Bridge ═══ -->
-  <div class="screen" id="screen-bridge">
-    <p class="bridge-line" id="bridge-line"></p>
-    <button class="skip-hint" id="skip-bridge">continue</button>
-  </div>
-
-  <!-- ═══ SCREEN 4: Song + Arc + CTA ═══ -->
-  <div class="screen" id="screen-song">
+  <!-- ═══ Song + Arc + CTA ═══ -->
+  <div class="screen active" id="screen-song">
     <div class="bg-art"></div>
     <div class="bg-fade"></div>
 
@@ -779,253 +550,35 @@
   </div>
 
   <script>
-    // ─── Video background mode (?bg=video) ────────────────────────
-    const VIDEO_BG_MODE = new URLSearchParams(location.search).get('bg') === 'video';
-    const VIDEO_SRCS = [
-      '../../nature videos/141356-777517873_medium.mp4',
-      '../../nature videos/36490-411342218_medium.mp4',
-      '../../nature videos/276615_medium.mp4',
-    ];
-    let videoIdx = 0;
-
-    function initVideoBg() {
-      if (!VIDEO_BG_MODE) return;
-      // Suppress static cover art bg — replaced by video on breath screen
-      document.getElementById('page-bg').style.transition = 'opacity 1.4s ease';
-      const videoEl = document.getElementById('breath-video');
-      videoEl.src = VIDEO_SRCS[0];
-      videoEl.addEventListener('ended', () => {
-        videoIdx = (videoIdx + 1) % VIDEO_SRCS.length;
-        videoEl.src = VIDEO_SRCS[videoIdx];
-        videoEl.play().catch(() => {});
-      });
-    }
-
-    function showVideoBg() {
-      if (!VIDEO_BG_MODE) return;
-      document.getElementById('page-bg').style.opacity = '0';
-      const bg = document.getElementById('breath-video-bg');
-      const videoEl = document.getElementById('breath-video');
-      bg.classList.add('show');
-      videoEl.play().catch(() => {});
-    }
-
-    function hideVideoBg() {
-      if (!VIDEO_BG_MODE) return;
-      document.getElementById('page-bg').style.opacity = '0.90';
-      const bg = document.getElementById('breath-video-bg');
-      const videoEl = document.getElementById('breath-video');
-      bg.classList.remove('show');
-      videoEl.pause();
+    // ─── Geolocation ──────────────────────────────────────────────
+    var geo = {};
+    var cachedGeo = sessionStorage.getItem('geo');
+    if (cachedGeo) {
+        geo = JSON.parse(cachedGeo);
+    } else {
+        fetch('https://ipinfo.io/json?token=339ed37d9d0087')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                geo.city = data.city || '';
+                geo.region = data.region || '';
+                geo.country = data.country || '';
+                sessionStorage.setItem('geo', JSON.stringify(geo));
+            })
+            .catch(function() {});
     }
 
     // ─── State ────────────────────────────────────────────────────
-    const SCREENS   = ['screen-breath', 'screen-bridge', 'screen-song'];
-    const PROGRESS  = [0, 70, 88, 100]; // % at start of each screen + done
-    let   current   = 0;
     let   soundOn   = true;
-    let   boxRAF     = null;
-    let   boxTimer   = null;
-    let   boxRunning = false;
 
     const audioEl   = document.getElementById('snippet');
-    const progFill  = document.getElementById('progress-fill');
     const soundBtn  = document.getElementById('sound-toggle');
     const iconOn    = document.getElementById('icon-on');
     const iconOff   = document.getElementById('icon-off');
     const soundLbl  = document.getElementById('sound-label');
 
-    // ─── Progress bar ─────────────────────────────────────────────
-    function setProgress(pct) {
-      progFill.style.width = pct + '%';
-    }
-
-    // ─── Screen transitions ───────────────────────────────────────
-    function goTo(idx) {
-      if (idx >= SCREENS.length) return;
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(SCREENS[idx]).classList.add('active');
-      current = idx;
-      setProgress(PROGRESS[idx]);
-      onEnter(idx);
-    }
-
-    function onEnter(idx) {
-      if (idx === 0) enterBreath();
-      if (idx === 1) enterBridge();
-      if (idx === 2) enterSong();
-    }
-
-    // ─── Screen 1: Arrival ────────────────────────────────────────
-    let arrivalTimer;
-    function enterArrival() {
-      soundBtn.classList.add('visible');
-      const line = document.getElementById('arrival-line');
-      const skip = document.getElementById('skip-arrival');
-      setTimeout(() => line.classList.add('show'), 600);
-      setTimeout(() => skip.classList.add('show'), 3500);
-      arrivalTimer = setTimeout(() => goTo(1), 7000);
-    }
-    document.getElementById('skip-arrival').addEventListener('click', () => {
-      clearTimeout(arrivalTimer);
-      tryPlayAudio(); // first interaction — browser allows audio now
-      goTo(1);
-    });
-
-    // ─── Screen 2: Box Breathing ──────────────────────────────────
-    const BOX_PHASE_MS = 4000; // 4 counts × 1000ms each
-    const BOX_PHASES = [
-      { word: 'inhale', side: 0 },  // top edge  — L→R
-      { word: 'hold',   side: 1 },  // right edge — T→B
-      { word: 'exhale', side: 2 },  // bottom     — R→L
-      { word: 'hold',   side: 3 },  // left edge  — B→T
-    ];
-    const TOTAL_CYCLE_MS = BOX_PHASE_MS * BOX_PHASES.length;
-
-    function enterBreath() {
-      boxRunning = true;
-      soundBtn.classList.add('visible');
-      showVideoBg();
-      // Below desktop, fade out cover art so breathing screen stays clean
-      if (window.innerWidth < 1024) {
-        const bg = document.getElementById('page-bg');
-        bg.style.transition = 'opacity 1.4s ease';
-        bg.style.opacity = '0';
-      }
-
-      // Fade in title
-      const titleEl = document.querySelector('.breath-title');
-      if (titleEl) setTimeout(() => titleEl.classList.add('show'), 400);
-
-      // Try audio — works if user has already interacted; else waits for first click
-      tryPlayAudio();
-      document.addEventListener('click', function audioOnInteract() {
-        tryPlayAudio();
-        document.removeEventListener('click', audioOnInteract);
-      }, { once: true });
-
-      const dot      = document.getElementById('box-dot');
-      const wordEl   = document.getElementById('box-phase-word');
-      const countEl  = document.getElementById('box-countdown');
-      const skipBtn  = document.getElementById('skip-breath');
-      const boxEl    = document.getElementById('box-breath-container');
-      const fillEl   = document.getElementById('breath-progress-fill');
-      const sides    = document.querySelectorAll('.box-side');
-
-      let lastPhaseIdx = -1;
-      let lastCount    = -1;
-      let cycleStart   = null; // set on first RAF frame so clock aligns with first paint
-
-      // Position dot at start corner immediately — no pre-animation pause
-      dot.style.left = '0px';
-      dot.style.top  = '0px';
-      setTimeout(() => skipBtn.classList.add('show'), 1500);
-      boxRAF = requestAnimationFrame(tick);
-
-      function tick(now) {
-        if (!boxRunning) return;
-        if (cycleStart === null) cycleStart = now; // anchor to first real frame
-
-        const elapsed       = now - cycleStart;
-        const cycleProgress = Math.min(elapsed / TOTAL_CYCLE_MS, 1);
-
-        // Which phase & position within it
-        const rawPhase = cycleProgress * BOX_PHASES.length;
-        const phaseIdx = Math.min(Math.floor(rawPhase), BOX_PHASES.length - 1);
-        const t        = rawPhase - phaseIdx; // 0..1 within phase
-
-        // Phase boundary crossed — update word
-        if (phaseIdx !== lastPhaseIdx) {
-          lastPhaseIdx = phaseIdx;
-          lastCount    = 4;
-          wordEl.classList.remove('show');
-          wordEl.textContent = BOX_PHASES[phaseIdx].word;
-          requestAnimationFrame(() => requestAnimationFrame(() => wordEl.classList.add('show')));
-          countEl.textContent = lastCount;
-        }
-
-        // Progressive side drawing — the dot leads, completed sides stay full
-        for (let i = 0; i < BOX_PHASES.length; i++) {
-          const pct = i < phaseIdx ? 100 : i === phaseIdx ? t * 100 : 0;
-          if (i === 0 || i === 2) sides[i].style.width  = pct + '%';
-          else                    sides[i].style.height = pct + '%';
-        }
-
-        // Count down every 1/4 of a phase
-        const countInPhase = Math.floor(t * 4); // 0..3
-        const currentCount = 4 - countInPhase;  // 4..1
-        if (currentCount !== lastCount) {
-          lastCount = currentCount;
-          countEl.textContent = currentCount;
-        }
-
-        // Dot position — continuous, no corner stops
-        const size  = boxEl.offsetWidth || 200;
-        const phase = BOX_PHASES[phaseIdx];
-        let x, y;
-        switch (phase.side) {
-          case 0: x = t * size;        y = 0;              break; // top L→R
-          case 1: x = size;            y = t * size;       break; // right T→B
-          case 2: x = (1 - t) * size;  y = size;           break; // bottom R→L
-          case 3: x = 0;               y = (1 - t) * size; break; // left B→T
-        }
-        dot.style.left = x + 'px';
-        dot.style.top  = y + 'px';
-
-        // Progress bars
-        if (fillEl) fillEl.style.width = (cycleProgress * 100) + '%';
-        setProgress(PROGRESS[1] + (PROGRESS[2] - PROGRESS[1]) * cycleProgress);
-
-        if (cycleProgress < 1) {
-          boxRAF = requestAnimationFrame(tick);
-        } else {
-          // Cycle complete — advance
-          wordEl.classList.remove('show');
-          countEl.textContent = '';
-          sides.forEach((s, i) => { if (i === 0 || i === 2) s.style.width = '0%'; else s.style.height = '0%'; });
-          setTimeout(() => { if (boxRunning) goTo(1); }, 700);
-        }
-      }
-    }
-
-    document.getElementById('skip-breath').addEventListener('click', () => {
-      boxRunning = false;
-      tryPlayAudio(); // ensure audio fires on this interaction
-      if (boxRAF)   cancelAnimationFrame(boxRAF);
-      if (boxTimer) clearInterval(boxTimer);
-      document.getElementById('box-phase-word').classList.remove('show');
-      document.getElementById('skip-breath').classList.remove('show');
-      const titleEl = document.querySelector('.breath-title');
-      if (titleEl) titleEl.classList.remove('show');
-      document.querySelectorAll('.box-side').forEach((s, i) => {
-        if (i === 0 || i === 2) s.style.width = '0%';
-        else s.style.height = '0%';
-      });
-      const fillEl = document.getElementById('breath-progress-fill');
-      if (fillEl) fillEl.style.width = '0%';
-      goTo(1); // bridge is now index 1 in SCREENS
-    });
-
-    // ─── Screen 3: Bridge ─────────────────────────────────────────
-    let bridgeTimer;
-    function enterBridge() {
-      hideVideoBg();
-      // No copy — brief atmospheric pause then advance
-      bridgeTimer = setTimeout(() => goTo(2), 1800);
-    }
-    document.getElementById('skip-bridge').addEventListener('click', () => {
-      clearTimeout(bridgeTimer);
-      goTo(2);
-    });
-
-    // ─── Screen 4: Song ───────────────────────────────────────────
+    // ─── Song screen init ─────────────────────────────────────────
     function enterSong() {
-      setProgress(100);
-      hideVideoBg();
-      // Restore the background image on all screen sizes
-      const bg = document.getElementById('page-bg');
-      bg.style.transition = 'opacity 1.4s ease';
-      bg.style.opacity = '0.90';
+      soundBtn.classList.add('visible');
       layoutArc();
       // Stagger tile reveals, then start orbit animation
       const arcTiles = document.querySelectorAll('.arc-tile');
@@ -1214,7 +767,7 @@
         }
       }
     }
-    window.addEventListener('resize', () => { if (current === 2) { layoutArc(); startOrbit(); } });
+    window.addEventListener('resize', () => { layoutArc(); startOrbit(); });
 
     // ─── Tile orbit animation ────────────────────────────────────
     // Tiles continuously rotate around the circle.
@@ -1245,7 +798,7 @@
 
       const startTime = performance.now();
       function tick(now) {
-        if (current !== 2) { orbitRAF = null; return; } // stop when leaving song screen
+        if (!orbitState) { orbitRAF = null; return; }
         const s = orbitState;
         const elapsed = (now - startTime) / 1000; // seconds
         const angleOffset = (elapsed / ORBIT_PERIOD) * 2 * Math.PI;
@@ -1332,7 +885,12 @@
         await fetch('https://services.leadconnectorhq.com/hooks/ihHaS0F8S91RB6AAC2hE/webhook-trigger/4156d8c5-701e-4dd8-9a28-c0d3b4a83ccf', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: val })
+          body: JSON.stringify({
+                email: val,
+                city: geo.city || '',
+                state: geo.region || '',
+                country: geo.country || ''
+            })
         });
       } catch (err) {
         console.warn('Webhook error:', err);
@@ -1431,8 +989,12 @@
     overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
 
     // ─── Start ────────────────────────────────────────────────────
-    initVideoBg();
-    goTo(0);
+    enterSong();
+    // Audio requires user interaction — try on first click
+    document.addEventListener('click', function audioOnInteract() {
+      tryPlayAudio();
+      document.removeEventListener('click', audioOnInteract);
+    }, { once: true });
   </script>
 </body>
 </html>
