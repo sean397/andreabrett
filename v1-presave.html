@@ -296,24 +296,37 @@
     .silence-success { font-style: italic; font-weight: 300; font-size: clamp(13px, 1.6vw, 16px); letter-spacing: 0.04em; color: #ffffff; text-align: center; display: none; }
 
     /* ══════════════════════════════════════════════
-       TEXT TILES (user submissions)
+       TILE RESPONSE OVERLAYS
     ══════════════════════════════════════════════ */
-    .arc-tile--text {
-      background: rgba(14,12,10,0.92);
+    .arc-tile { position: absolute; overflow: hidden; }
+    .tile-overlay {
+      position: absolute; inset: 0;
+      background: rgba(8,8,8,0.78);
       display: flex; align-items: center; justify-content: center;
-      padding: 10px;
+      padding: 6px;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      cursor: pointer;
     }
-    .arc-tile--text .arc-tile-text {
+    .tile-overlay.active { opacity: 1; }
+    .tile-overlay-text {
       font-family: 'Touvlo', sans-serif;
       font-style: italic; font-weight: 300;
-      font-size: 10px; line-height: 1.5;
-      color: rgba(200,196,188,0.9);
+      font-size: 7px; line-height: 1.4;
+      color: rgba(245,242,237,0.9);
       text-align: center;
       overflow: hidden;
       display: -webkit-box;
-      -webkit-line-clamp: 5;
+      -webkit-line-clamp: 4;
       -webkit-box-orient: vertical;
       pointer-events: none;
+    }
+    @media (min-width: 600px) {
+      .tile-overlay-text { font-size: 8px; -webkit-line-clamp: 5; }
+    }
+    @media (min-width: 1024px) {
+      .tile-overlay { padding: 10px; }
+      .tile-overlay-text { font-size: 10px; line-height: 1.5; -webkit-line-clamp: 6; }
     }
 
     /* ══════════════════════════════════════════════
@@ -351,6 +364,7 @@
       border-bottom: 1px solid rgba(200,196,188,0.08);
     }
     .submission-entry:last-child { border-bottom: none; padding-bottom: 0; }
+    .submission-highlight { color: var(--white); border-color: rgba(200,196,188,0.35); }
     .submissions-close {
       background: none; border: 1px solid rgba(200,196,188,0.2);
       padding: 10px 28px;
@@ -580,6 +594,7 @@
     function enterSong() {
       soundBtn.classList.add('visible');
       layoutArc();
+      initTileOverlays();
       // Stagger tile reveals, then start orbit animation
       const arcTiles = document.querySelectorAll('.arc-tile');
       arcTiles.forEach((t, i) => {
@@ -591,6 +606,8 @@
       document.querySelectorAll('#screen-song .reveal').forEach(el => {
         el.classList.add('show');
       });
+      // Load existing responses from Google Sheets
+      loadResponses();
     }
 
     function layoutArc() {
@@ -909,17 +926,143 @@
     document.getElementById('email-submit').addEventListener('click', handleEmail);
     document.getElementById('email-input').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); handleEmail(); } });
 
-    // ─── Silence submission ───────────────────────────────────────
-    const submissions = [];
+    // ─── Silence responses (Google Sheets backend) ─────────────────
+    // REPLACE THIS URL with your deployed Google Apps Script web app URL
+    const SHEETS_API_URL = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
+    let allResponses = [];  // full list from Google Sheets
+    let displayedResponses = []; // currently shown on tiles
+    const TILE_COUNT = 20;
+    let shuffleInterval = null;
+
+    // Add overlay div to each tile for displaying responses
+    function initTileOverlays() {
+      document.querySelectorAll('.arc-tile').forEach(tile => {
+        if (!tile.querySelector('.tile-overlay')) {
+          const overlay = document.createElement('div');
+          overlay.className = 'tile-overlay';
+          overlay.innerHTML = '<span class="tile-overlay-text"></span>';
+          tile.appendChild(overlay);
+        }
+      });
+    }
+
+    // Assign responses to tile overlays
+    function renderResponsesOnTiles() {
+      const tiles = Array.from(document.querySelectorAll('.arc-tile'));
+      tiles.forEach((tile, i) => {
+        const overlay = tile.querySelector('.tile-overlay');
+        if (!overlay) return;
+        if (i < displayedResponses.length) {
+          const textEl = overlay.querySelector('.tile-overlay-text');
+          textEl.textContent = displayedResponses[i].response;
+          overlay.classList.add('active');
+        } else {
+          overlay.classList.remove('active');
+        }
+      });
+    }
+
+    // Shuffle array (Fisher-Yates)
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    // Pick which responses to show — if more than TILE_COUNT, randomize
+    function pickDisplayed() {
+      if (allResponses.length <= TILE_COUNT) {
+        displayedResponses = [...allResponses];
+      } else {
+        displayedResponses = shuffle(allResponses).slice(0, TILE_COUNT);
+      }
+    }
+
+    // Start randomizer when all tiles are full
+    function startShuffleIfNeeded() {
+      if (allResponses.length > TILE_COUNT && !shuffleInterval) {
+        shuffleInterval = setInterval(() => {
+          // Fade out overlays, reshuffle, fade back in
+          document.querySelectorAll('.tile-overlay.active').forEach(o => o.classList.remove('active'));
+          setTimeout(() => {
+            pickDisplayed();
+            renderResponsesOnTiles();
+          }, 600);
+        }, 12000); // reshuffle every 12 seconds
+      }
+    }
+
+    // Load existing responses from Google Sheets
+    function loadResponses() {
+      if (SHEETS_API_URL.includes('PASTE_YOUR')) return; // skip if not configured
+      fetch(SHEETS_API_URL)
+        .then(r => r.json())
+        .then(data => {
+          if (data.responses && data.responses.length > 0) {
+            allResponses = data.responses;
+            pickDisplayed();
+            // Stagger the overlay reveals
+            const tiles = document.querySelectorAll('.arc-tile');
+            displayedResponses.forEach((resp, i) => {
+              if (i < tiles.length) {
+                setTimeout(() => renderResponsesOnTiles(), i * 150);
+              }
+            });
+            renderResponsesOnTiles();
+            startShuffleIfNeeded();
+          }
+        })
+        .catch(err => console.warn('Failed to load responses:', err));
+    }
+
+    // Submit a new silence response
     document.getElementById('silence-submit').addEventListener('click', () => {
       const val = document.getElementById('silence-input').value.trim();
       if (!val) return;
-      // TODO: POST to backend (Airtable/Notion)
-      console.log('Silence submission:', val);
-      submissions.push(val);
-      addSubmissionTile(val);
 
+      const btn = document.getElementById('silence-submit');
+      btn.disabled = true;
+      btn.textContent = 'Sharing...';
+
+      // POST to Google Sheets
+      if (!SHEETS_API_URL.includes('PASTE_YOUR')) {
+        fetch(SHEETS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' }, // Apps Script requires text/plain for CORS
+          body: JSON.stringify({
+            response: val,
+            email: document.getElementById('email-input').value.trim(),
+            city: geo.city || '',
+            state: geo.region || '',
+            country: geo.country || ''
+          })
+        }).catch(err => console.warn('Sheet POST error:', err));
+      }
+
+      // Also send to GHL webhook
+      fetch('https://services.leadconnectorhq.com/hooks/ihHaS0F8S91RB6AAC2hE/webhook-trigger/4156d8c5-701e-4dd8-9a28-c0d3b4a83ccf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          silence_response: val,
+          email: document.getElementById('email-input').value.trim(),
+          city: geo.city || '',
+          state: geo.region || '',
+          country: geo.country || ''
+        })
+      }).catch(() => {});
+
+      // Add to local state immediately (optimistic)
+      allResponses.push({ response: val, city: geo.city || '' });
+      pickDisplayed();
+      renderResponsesOnTiles();
+      startShuffleIfNeeded();
+
+      // Transition to success message
       const question = document.querySelector('.silence-question');
       const form = document.getElementById('silence-form');
       const succ = document.getElementById('silence-success');
@@ -937,32 +1080,32 @@
       }, 500);
     });
 
-    function addSubmissionTile(text) {
-      const canvas = document.getElementById('arc-canvas');
-      const tile = document.createElement('div');
-      tile.className = 'arc-tile arc-tile--text';
-      tile.innerHTML = `<span class="arc-tile-text">${text.replace(/</g,'&lt;')}</span>`;
-      canvas.appendChild(tile);
-      layoutArc();
-      setTimeout(() => tile.classList.add('show'), 50);
-    }
-
-    // ─── Tile click → submissions modal ──────────────────────────
+    // ─── Tile click → show response detail ───────────────────────
     document.getElementById('arc-canvas').addEventListener('click', e => {
       const tile = e.target.closest('.arc-tile');
-      if (!tile || submissions.length === 0) return;
-      openSubmissions();
+      if (!tile) return;
+      const overlay = tile.querySelector('.tile-overlay.active');
+      if (!overlay) return;
+      const text = overlay.querySelector('.tile-overlay-text').textContent;
+      if (!text) return;
+      openSubmissions(text);
     });
 
     // ─── Submissions modal ────────────────────────────────────────
     const subOverlay = document.getElementById('submissions-overlay');
 
-    function openSubmissions() {
+    function openSubmissions(highlightText) {
       const list = document.getElementById('submissions-list');
-      list.innerHTML = submissions.map(s =>
-        `<p class="submission-entry">${s.replace(/</g,'&lt;')}</p>`
-      ).join('');
+      // Show all displayed responses, highlight the clicked one
+      list.innerHTML = displayedResponses.map(s => {
+        const isHighlight = s.response === highlightText;
+        const cls = isHighlight ? 'submission-entry submission-highlight' : 'submission-entry';
+        return `<p class="${cls}">${s.response.replace(/</g,'&lt;')}${s.city ? ' <span style="opacity:0.4;font-size:11px;">— ' + s.city.replace(/</g,'&lt;') + '</span>' : ''}</p>`;
+      }).join('');
       subOverlay.classList.add('show');
+      // Scroll to highlighted entry
+      const hl = list.querySelector('.submission-highlight');
+      if (hl) hl.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
     function closeSubmissions() { subOverlay.classList.remove('show'); }
     document.getElementById('submissions-close').addEventListener('click', closeSubmissions);
