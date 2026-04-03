@@ -928,7 +928,7 @@
 
     // ─── Silence responses (Google Sheets backend) ─────────────────
     // REPLACE THIS URL with your deployed Google Apps Script web app URL
-    const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxtYeFYQ6r-zyAPoySnKn_rFgVVV_s2ZEW0CBV6-7biziQCa7n5OU7hThv220qXiTE_Gg/exec';
+    const SHEETS_API_URL = 'https://amos-api.vercel.app/api/responses';
 
     let allResponses = [];  // full list from Google Sheets
     let displayedResponses = []; // currently shown on tiles
@@ -998,7 +998,7 @@
 
     // Load existing responses from Google Sheets
     function loadResponses() {
-      if (SHEETS_API_URL.includes('PASTE_YOUR')) return; // skip if not configured
+
       fetch(SHEETS_API_URL)
         .then(r => r.json())
         .then(data => {
@@ -1029,10 +1029,10 @@
       btn.textContent = 'Sharing...';
 
       // POST to Google Sheets
-      if (!SHEETS_API_URL.includes('PASTE_YOUR')) {
+      {
         fetch(SHEETS_API_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain' }, // Apps Script requires text/plain for CORS
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             response: val,
             email: document.getElementById('email-input').value.trim(),
