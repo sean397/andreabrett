@@ -296,76 +296,59 @@
     .silence-success { font-style: italic; font-weight: 300; font-size: clamp(13px, 1.6vw, 16px); letter-spacing: 0.04em; color: #ffffff; text-align: center; display: none; }
 
     /* ══════════════════════════════════════════════
-       TILE RESPONSE OVERLAYS
+       TILE RESPONSE INDICATOR
     ══════════════════════════════════════════════ */
-    .arc-tile { position: absolute; overflow: hidden; }
-    .tile-overlay {
+    .arc-tile { position: absolute; overflow: hidden; cursor: pointer; }
+    .arc-tile.has-response { box-shadow: 0 0 12px rgba(245,242,237,0.15); }
+    .arc-tile.has-response::after {
+      content: '';
       position: absolute; inset: 0;
-      background: rgba(8,8,8,0.78);
-      display: flex; align-items: center; justify-content: center;
-      padding: 6px;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-      cursor: pointer;
-    }
-    .tile-overlay.active { opacity: 1; }
-    .tile-overlay-text {
-      font-family: 'Touvlo', sans-serif;
-      font-style: italic; font-weight: 300;
-      font-size: 7px; line-height: 1.4;
-      color: rgba(245,242,237,0.9);
-      text-align: center;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
+      border: 1.5px solid rgba(245,242,237,0.25);
+      border-radius: inherit;
       pointer-events: none;
-    }
-    @media (min-width: 600px) {
-      .tile-overlay-text { font-size: 8px; -webkit-line-clamp: 5; }
-    }
-    @media (min-width: 1024px) {
-      .tile-overlay { padding: 10px; }
-      .tile-overlay-text { font-size: 10px; line-height: 1.5; -webkit-line-clamp: 6; }
     }
 
     /* ══════════════════════════════════════════════
-       SUBMISSIONS MODAL
+       RESPONSE POPUP — one per tile click
     ══════════════════════════════════════════════ */
-    #submissions-overlay {
+    #response-popup {
       position: fixed; inset: 0;
-      background: rgba(8,8,8,0.88); backdrop-filter: blur(6px);
+      background: rgba(8,8,8,0.90); backdrop-filter: blur(8px);
       display: flex; align-items: center; justify-content: center;
       z-index: 600; padding: 24px;
-      opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
+      opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
     }
-    #submissions-overlay.show { opacity: 1; pointer-events: all; }
-    .submissions-modal {
-      background: #0d0b09; border: 1px solid rgba(200,196,188,0.12);
-      max-width: 480px; width: 100%; padding: 48px 36px; text-align: center;
-      transform: translateY(20px); transition: transform 0.6s ease;
-      max-height: 80vh; overflow-y: auto;
+    #response-popup.show { opacity: 1; pointer-events: all; }
+    .response-card {
+      background: #0d0b09;
+      border: 1px solid rgba(200,196,188,0.12);
+      max-width: 420px; width: 100%;
+      padding: 48px 40px;
+      text-align: center;
+      transform: translateY(20px) scale(0.96);
+      transition: transform 0.5s ease;
     }
-    #submissions-overlay.show .submissions-modal { transform: translateY(0); }
-    .submissions-eyebrow {
-      font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
-      color: var(--dim); margin-bottom: 22px;
+    #response-popup.show .response-card { transform: translateY(0) scale(1); }
+    .response-eyebrow {
+      font-family: 'Touvlo', sans-serif;
+      font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--dim); margin-bottom: 28px;
     }
-    #submissions-list {
-      display: flex; flex-direction: column; gap: 20px;
-      margin-bottom: 32px;
-    }
-    .submission-entry {
+    .response-text {
       font-family: 'Touvlo', sans-serif;
       font-style: italic; font-weight: 300;
-      font-size: clamp(16px, 2.5vw, 20px); line-height: 1.7;
-      color: var(--off-white);
-      padding-bottom: 20px;
-      border-bottom: 1px solid rgba(200,196,188,0.08);
+      font-size: clamp(18px, 3vw, 26px);
+      line-height: 1.7;
+      color: var(--white);
+      margin-bottom: 20px;
     }
-    .submission-entry:last-child { border-bottom: none; padding-bottom: 0; }
-    .submission-highlight { color: var(--white); border-color: rgba(200,196,188,0.35); }
-    .submissions-close {
+    .response-city {
+      font-family: 'Touvlo', sans-serif;
+      font-size: 11px; letter-spacing: 0.18em;
+      color: rgba(200,196,188,0.4);
+      margin-bottom: 36px;
+    }
+    .response-close {
       background: none; border: 1px solid rgba(200,196,188,0.2);
       padding: 10px 28px;
       font-family: 'Touvlo', sans-serif;
@@ -373,7 +356,7 @@
       color: var(--dim); cursor: pointer;
       transition: color 0.3s, border-color 0.3s;
     }
-    .submissions-close:hover { color: var(--white); border-color: rgba(200,196,188,0.5); }
+    .response-close:hover { color: var(--white); border-color: rgba(200,196,188,0.5); }
 
     /* ══════════════════════════════════════════════
        LISTENING PARTY MODAL
@@ -541,11 +524,12 @@
   </div>
 
   <!-- Submissions modal -->
-  <div id="submissions-overlay" role="dialog" aria-modal="true">
-    <div class="submissions-modal">
-      <p class="submissions-eyebrow">Moments of Silence</p>
-      <div id="submissions-list"></div>
-      <button class="submissions-close" id="submissions-close">Close</button>
+  <div id="response-popup" role="dialog" aria-modal="true">
+    <div class="response-card">
+      <p class="response-eyebrow">A Moment of Silence</p>
+      <p class="response-text" id="response-text"></p>
+      <p class="response-city" id="response-city"></p>
+      <button class="response-close" id="response-close">Close</button>
     </div>
   </div>
 
@@ -935,30 +919,20 @@
     const TILE_COUNT = 20;
     let shuffleInterval = null;
 
-    // Add overlay div to each tile for displaying responses
-    function initTileOverlays() {
-      document.querySelectorAll('.arc-tile').forEach(tile => {
-        if (!tile.querySelector('.tile-overlay')) {
-          const overlay = document.createElement('div');
-          overlay.className = 'tile-overlay';
-          overlay.innerHTML = '<span class="tile-overlay-text"></span>';
-          tile.appendChild(overlay);
-        }
-      });
-    }
+    // Assign responses to tiles as data attributes (no text overlay)
+    function initTileOverlays() {} // kept for compatibility
 
-    // Assign responses to tile overlays
     function renderResponsesOnTiles() {
       const tiles = Array.from(document.querySelectorAll('.arc-tile'));
       tiles.forEach((tile, i) => {
-        const overlay = tile.querySelector('.tile-overlay');
-        if (!overlay) return;
         if (i < displayedResponses.length) {
-          const textEl = overlay.querySelector('.tile-overlay-text');
-          textEl.textContent = displayedResponses[i].response;
-          overlay.classList.add('active');
+          tile.dataset.response = displayedResponses[i].response;
+          tile.dataset.city = displayedResponses[i].city || '';
+          tile.classList.add('has-response');
         } else {
-          overlay.classList.remove('active');
+          delete tile.dataset.response;
+          delete tile.dataset.city;
+          tile.classList.remove('has-response');
         }
       });
     }
@@ -1080,37 +1054,23 @@
       }, 500);
     });
 
-    // ─── Tile click → show response detail ───────────────────────
+    // ─── Tile click → individual response popup ───────────────────
+    const responsePopup = document.getElementById('response-popup');
+    const responseText = document.getElementById('response-text');
+    const responseCity = document.getElementById('response-city');
+
     document.getElementById('arc-canvas').addEventListener('click', e => {
       const tile = e.target.closest('.arc-tile');
-      if (!tile) return;
-      const overlay = tile.querySelector('.tile-overlay.active');
-      if (!overlay) return;
-      const text = overlay.querySelector('.tile-overlay-text').textContent;
-      if (!text) return;
-      openSubmissions(text);
+      if (!tile || !tile.dataset.response) return;
+      responseText.textContent = tile.dataset.response;
+      responseCity.textContent = tile.dataset.city ? '— ' + tile.dataset.city : '';
+      responsePopup.classList.add('show');
     });
 
-    // ─── Submissions modal ────────────────────────────────────────
-    const subOverlay = document.getElementById('submissions-overlay');
-
-    function openSubmissions(highlightText) {
-      const list = document.getElementById('submissions-list');
-      // Show all displayed responses, highlight the clicked one
-      list.innerHTML = displayedResponses.map(s => {
-        const isHighlight = s.response === highlightText;
-        const cls = isHighlight ? 'submission-entry submission-highlight' : 'submission-entry';
-        return `<p class="${cls}">${s.response.replace(/</g,'&lt;')}${s.city ? ' <span style="opacity:0.4;font-size:11px;">— ' + s.city.replace(/</g,'&lt;') + '</span>' : ''}</p>`;
-      }).join('');
-      subOverlay.classList.add('show');
-      // Scroll to highlighted entry
-      const hl = list.querySelector('.submission-highlight');
-      if (hl) hl.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    }
-    function closeSubmissions() { subOverlay.classList.remove('show'); }
-    document.getElementById('submissions-close').addEventListener('click', closeSubmissions);
-    subOverlay.addEventListener('click', e => { if (e.target === subOverlay) closeSubmissions(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeSubmissions(); closeModal(); } });
+    function closePopup() { responsePopup.classList.remove('show'); }
+    document.getElementById('response-close').addEventListener('click', closePopup);
+    responsePopup.addEventListener('click', e => { if (e.target === responsePopup) closePopup(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePopup(); closeModal(); } });
 
     // ─── Listening party modal ────────────────────────────────────
     const overlay = document.getElementById('modal-overlay');
