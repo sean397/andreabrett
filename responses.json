@@ -14,45 +14,129 @@
     "timestamp": "2026-04-03T00:23:49.930Z"
   },
   {
-    "response": "Test response 1 - meditation and prayer",
-    "city": "City1",
-    "state": "State1",
-    "country": "CA",
-    "timestamp": "2026-04-03T00:24:54.530Z"
-  },
-  {
-    "response": "Test response 2 - meditation and prayer",
-    "city": "City2",
-    "state": "State2",
-    "country": "CA",
-    "timestamp": "2026-04-03T00:24:55.196Z"
-  },
-  {
-    "response": "Test response 3 - meditation and prayer",
-    "city": "City3",
-    "state": "State3",
-    "country": "CA",
-    "timestamp": "2026-04-03T00:24:56.299Z"
-  },
-  {
-    "response": "Test response 4 - meditation and prayer",
-    "city": "City4",
-    "state": "State4",
-    "country": "CA",
-    "timestamp": "2026-04-03T00:24:56.833Z"
-  },
-  {
-    "response": "Test response 5 - meditation and prayer",
-    "city": "City5",
-    "state": "State5",
-    "country": "CA",
-    "timestamp": "2026-04-03T00:24:57.372Z"
-  },
-  {
     "response": "Prayer before bed",
     "city": "Atlanta",
     "state": "Georgia",
     "country": "US",
     "timestamp": "2026-04-03T00:30:42.272Z"
+  },
+  {
+    "response": "Deep breaths on my morning commute",
+    "city": "Chicago",
+    "state": "Illinois",
+    "country": "US",
+    "timestamp": "2026-04-03T01:15:22.100Z"
+  },
+  {
+    "response": "Sitting by the water at sunset",
+    "city": "Vancouver",
+    "state": "British Columbia",
+    "country": "CA",
+    "timestamp": "2026-04-03T01:22:08.450Z"
+  },
+  {
+    "response": "Journaling with my morning coffee",
+    "city": "Nashville",
+    "state": "Tennessee",
+    "country": "US",
+    "timestamp": "2026-04-03T01:35:44.200Z"
+  },
+  {
+    "response": "Closing my eyes between meetings",
+    "city": "New York",
+    "state": "New York",
+    "country": "US",
+    "timestamp": "2026-04-03T01:42:11.880Z"
+  },
+  {
+    "response": "Meditation before the kids wake up",
+    "city": "Houston",
+    "state": "Texas",
+    "country": "US",
+    "timestamp": "2026-04-03T02:05:33.710Z"
+  },
+  {
+    "response": "Driving with no music, just thinking",
+    "city": "Los Angeles",
+    "state": "California",
+    "country": "US",
+    "timestamp": "2026-04-03T02:18:59.330Z"
+  },
+  {
+    "response": "A long shower after a hard day",
+    "city": "Detroit",
+    "state": "Michigan",
+    "country": "US",
+    "timestamp": "2026-04-03T02:31:07.560Z"
+  },
+  {
+    "response": "Watching the sunrise from my porch",
+    "city": "Charlotte",
+    "state": "North Carolina",
+    "country": "US",
+    "timestamp": "2026-04-03T02:45:19.440Z"
+  },
+  {
+    "response": "Laying in the dark with headphones on",
+    "city": "Philadelphia",
+    "state": "Pennsylvania",
+    "country": "US",
+    "timestamp": "2026-04-03T03:02:55.120Z"
+  },
+  {
+    "response": "Gardening on Sunday mornings",
+    "city": "Dallas",
+    "state": "Texas",
+    "country": "US",
+    "timestamp": "2026-04-03T03:14:28.990Z"
+  },
+  {
+    "response": "A quiet walk after dinner",
+    "city": "Montreal",
+    "state": "Quebec",
+    "country": "CA",
+    "timestamp": "2026-04-03T03:28:41.650Z"
+  },
+  {
+    "response": "Stretching in the morning light",
+    "city": "Denver",
+    "state": "Colorado",
+    "country": "US",
+    "timestamp": "2026-04-03T03:39:17.380Z"
+  },
+  {
+    "response": "Reading scripture before sleep",
+    "city": "Memphis",
+    "state": "Tennessee",
+    "country": "US",
+    "timestamp": "2026-04-03T03:52:06.200Z"
+  },
+  {
+    "response": "Staring out the window on the train",
+    "city": "Washington",
+    "state": "DC",
+    "country": "US",
+    "timestamp": "2026-04-03T04:08:33.740Z"
+  },
+  {
+    "response": "Cooking alone with no distractions",
+    "city": "Miami",
+    "state": "Florida",
+    "country": "US",
+    "timestamp": "2026-04-03T04:21:48.510Z"
+  },
+  {
+    "response": "Sitting in the car before going inside",
+    "city": "Oakland",
+    "state": "California",
+    "country": "US",
+    "timestamp": "2026-04-03T04:35:02.890Z"
+  },
+  {
+    "response": "Five minutes of stillness after prayer",
+    "city": "Baltimore",
+    "state": "Maryland",
+    "country": "US",
+    "timestamp": "2026-04-03T04:47:29.160Z"
   }
 ]
