@@ -47,5 +47,12 @@
     "state": "State5",
     "country": "CA",
     "timestamp": "2026-04-03T00:24:57.372Z"
+  },
+  {
+    "response": "Prayer before bed",
+    "city": "Atlanta",
+    "state": "Georgia",
+    "country": "US",
+    "timestamp": "2026-04-03T00:30:42.272Z"
   }
 ]
