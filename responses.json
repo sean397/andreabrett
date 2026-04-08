@@ -145,5 +145,12 @@
     "state": "Utah",
     "country": "US",
     "timestamp": "2026-04-03T20:16:07.949Z"
+  },
+  {
+    "response": "praying",
+    "city": "Branson",
+    "state": "Missouri",
+    "country": "US",
+    "timestamp": "2026-04-08T00:50:42.038Z"
   }
 ]
