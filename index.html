@@ -85,33 +85,29 @@
     }
 
     /* ══════════════════════════════════════════════
-       AUDIO HINT
+       SOUND TOGGLE
     ══════════════════════════════════════════════ */
-    #audio-hint {
-      position: absolute;
-      bottom: calc(100% + 16px);
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 15;
-      font-family: 'Touvlo', sans-serif;
-      font-style: italic; font-weight: 300;
-      font-size: 13px; letter-spacing: 0.12em;
-      color: rgba(245,242,237,0.75);
-      text-align: center; white-space: nowrap;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 1.2s ease;
-      animation: audioHintPulse 2.8s ease-in-out infinite;
+    #sound-toggle {
+      position: fixed; top: 20px; right: 24px; z-index: 500;
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+      opacity: 0; transition: opacity 0.8s ease;
+      padding: 6px;
     }
-    #audio-hint.visible { opacity: 1; }
-    #audio-hint.hidden { opacity: 0; animation: none; }
-    @keyframes audioHintPulse {
-      0%, 100% { filter: brightness(0.8); }
-      50% { filter: brightness(1.15); }
+    #sound-toggle.visible { opacity: 1; }
+    #sound-toggle:hover .sound-label { color: var(--off-white); }
+
+    .sound-label {
+      font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--off-white); transition: color 0.3s;
+      user-select: none;
     }
-    @media (max-width: 600px) {
-      #audio-hint { font-size: 11px; letter-spacing: 0.08em; bottom: calc(100% + 10px); }
+    .sound-icon {
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
     }
+    .sound-icon svg { width: 16px; height: 16px; stroke: var(--off-white); fill: none; stroke-width: 1.5; transition: stroke 0.3s; }
+    #sound-toggle:hover .sound-icon svg { stroke: var(--white); }
 
     /* ══════════════════════════════════════════════
        SCREENS — shared
@@ -202,8 +198,9 @@
       margin-bottom: 18px;
     }
     .artist-name {
-      font-size: clamp(12px, 1.8vw, 19px);
-      letter-spacing: 0.42em; text-transform: uppercase; color: var(--off-white);
+      font-size: clamp(11px, 1.4vw, 15px);
+      letter-spacing: 0.24em; text-transform: uppercase; color: var(--off-white);
+      white-space: nowrap;
     }
     .by-line {
       font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
@@ -290,7 +287,13 @@
       .tile-hint { display: none; }
       .email-note { font-size: 12px; margin-top: 12px; line-height: 1.55; max-width: 280px; margin-left: auto; margin-right: auto; }
     }
-    .email-success { display: none; font-style: italic; font-size: 16px; color: rgba(200,196,188,0.55); }
+    .email-success {
+      display: none; font-style: italic; font-size: 16px;
+      color: #f5f2ed; line-height: 1.5;
+      margin-bottom: 18px;
+      opacity: 1; transition: opacity 0.8s ease;
+    }
+    .email-success.fade-out { opacity: 0; }
 
     /* Silence question + submission */
     .silence-section { width: 100%; }
@@ -441,11 +444,11 @@
       }
 
       .artist-name {
-        font-size: 14px;
-        letter-spacing: 0.26em;
+        font-size: 11px;
+        letter-spacing: 0.14em;
       }
 
-      .by-line { font-size: 12px; margin-top: 6px; letter-spacing: 0.22em; }
+      .by-line { display: none; }
 
       .rule { display: none; }
 
@@ -481,6 +484,22 @@
 
   <audio id="snippet" src="./audio.m4a" preload="none" loop></audio>
 
+  <!-- Sound toggle -->
+  <button id="sound-toggle" aria-label="Toggle sound">
+    <div class="sound-icon">
+      <svg id="icon-on" viewBox="0 0 24 24" style="display:none">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      </svg>
+      <svg id="icon-off" viewBox="0 0 24 24" style="display:block">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+      </svg>
+    </div>
+    <span class="sound-label" id="sound-label">Sound off</span>
+  </button>
+
   <!-- Cover art background -->
   <div id="page-bg"></div>
 
@@ -513,29 +532,27 @@
     </div>
 
     <div class="arc-center">
-      <div id="audio-hint">Click anywhere to hear the instrumental</div>
       <div class="reveal d1">
-        <p class="release-eyebrow">A new song featuring the voice of the Phantom of the Opera, North American Tour</p>
+        <p class="release-eyebrow">A new song with the voice of the Phantom of the Opera</p>
       </div>
       <div class="reveal d1"><h1 class="song-title"><span class="line-nowrap">A Moment</span><br><span class="line-nowrap">of Silence</span></h1></div>
       <div class="reveal d2">
-        <p class="artist-name line-nowrap">Andrea Brett</p>
-        <p class="by-line line-nowrap">Featuring Isaiah Bailey</p>
+        <p class="artist-name">Andrea Brett feat. Isaiah Bailey</p>
         <p class="tile-hint">Tap the images to see how others take their moment of silence</p>
       </div>
       <div class="rule reveal d3"></div>
       <div class="cta-wrap reveal d4">
         <div class="cta-swap">
           <div id="email-section">
-            <label class="email-label" for="email-input">Follow the story — pre-save the song — out April 14</label>
+            <label class="email-label" for="email-input">Follow the story — pre-save the song — coming April 14</label>
             <div class="email-row" id="email-row">
               <input id="email-input" type="email" class="email-input" placeholder="your@email.com" autocomplete="email" />
               <button class="email-submit" id="email-submit">Submit</button>
             </div>
-            <p class="email-note">Check your email for the story and what's coming next.</p>
-            <div class="email-success" id="email-success" aria-live="polite">You're on the list.</div>
+            <p class="email-note">Check your email for what's coming next.</p>
           </div>
           <div class="silence-section" id="silence-section" style="display:none; opacity:0;">
+            <div class="email-success" id="email-success" aria-live="polite">Check your inbox — we just sent you an email.</div>
             <p class="silence-question">What's your favorite way to take a moment of silence?</p>
             <div id="silence-form">
               <textarea id="silence-input" class="silence-input" placeholder="Share yours..." rows="3"></textarea>
@@ -591,10 +608,16 @@
     }
 
     // ─── State ────────────────────────────────────────────────────
+    let   soundOn   = false;
     const audioEl   = document.getElementById('snippet');
+    const soundBtn  = document.getElementById('sound-toggle');
+    const iconOn    = document.getElementById('icon-on');
+    const iconOff   = document.getElementById('icon-off');
+    const soundLbl  = document.getElementById('sound-label');
 
     // ─── Song screen init ─────────────────────────────────────────
     function enterSong() {
+      soundBtn.classList.add('visible');
       layoutArc();
       initTileOverlays();
       // Stagger tile reveals, then start orbit animation
@@ -910,20 +933,19 @@
 
     // ─── Audio playback ───────────────────────────────────────────
     let audioStarted = false;
-    const audioHint = document.getElementById('audio-hint');
 
-    function hideAudioHint() {
-      if (!audioHint) return;
-      audioHint.classList.remove('visible');
-      audioHint.classList.add('hidden');
+    function setSoundUI(on) {
+      soundOn = on;
+      iconOn.style.display  = on ? 'block' : 'none';
+      iconOff.style.display = on ? 'none'  : 'block';
+      soundLbl.textContent  = on ? 'Sound on' : 'Sound off';
     }
 
-    function tryPlayAudio() {
-      if (audioStarted) return;
+    function startAudio() {
       audioEl.volume = 0;
       audioEl.play().then(() => {
         audioStarted = true;
-        hideAudioHint();
+        setSoundUI(true);
         fadeAudio(audioEl, 0, 0.5, 1200);
       }).catch(() => {});
     }
@@ -936,6 +958,23 @@
         if ((delta > 0 && v >= to) || (delta < 0 && v <= to)) { el.volume = to; clearInterval(t); }
       }, tick);
     }
+
+    soundBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!audioStarted) {
+        // First interaction — start playback and flip UI to "on"
+        startAudio();
+        return;
+      }
+      if (soundOn) {
+        setSoundUI(false);
+        fadeAudio(audioEl, audioEl.volume, 0, 600);
+        setTimeout(() => audioEl.pause(), 700);
+      } else {
+        setSoundUI(true);
+        audioEl.play().then(() => fadeAudio(audioEl, 0, 0.5, 600)).catch(() => {});
+      }
+    });
 
     // ─── Email ────────────────────────────────────────────────────
     async function handleEmail() {
@@ -963,15 +1002,30 @@
       } catch (err) {
         console.warn('Webhook error:', err);
       }
+      // Fade out the email form, then show the silence section with the
+      // "email sent" confirmation visible above the question. The
+      // confirmation fades out after a moment, leaving just the question.
       const emailSection = document.getElementById('email-section');
       emailSection.style.transition = 'opacity 0.6s';
       emailSection.style.opacity = '0';
       setTimeout(() => {
         emailSection.style.display = 'none';
         const silenceSection = document.getElementById('silence-section');
+        const emailSuccess   = document.getElementById('email-success');
+        if (emailSuccess) {
+          emailSuccess.style.display = 'block';
+          emailSuccess.classList.remove('fade-out');
+        }
         silenceSection.style.display = 'block';
         silenceSection.style.transition = 'opacity 1s ease';
         requestAnimationFrame(() => silenceSection.style.opacity = '1');
+        // Fade the email confirmation out after a moment.
+        setTimeout(() => {
+          if (emailSuccess) {
+            emailSuccess.classList.add('fade-out');
+            setTimeout(() => { emailSuccess.style.display = 'none'; }, 900);
+          }
+        }, 3500);
       }, 650);
     }
     document.getElementById('email-submit').addEventListener('click', handleEmail);
@@ -1160,22 +1214,13 @@
 
     // ─── Start ────────────────────────────────────────────────────
     enterSong();
-    // Try to autoplay on load — most browsers will block this.
-    tryPlayAudio();
-    // If autoplay didn't take hold, reveal the hint after the staggered
-    // content reveals finish (last one lands around 2.7s).
-    setTimeout(() => {
-      if (!audioStarted && audioHint) {
-        audioHint.classList.add('visible');
-      }
-    }, 2800);
-    // Fallback: start on first user interaction (click or touch).
+    // Default: sound off. Audio starts on first user interaction (click or touch)
+    // anywhere on the page, which also flips the toggle UI to "Sound on".
     function audioOnInteract() {
-      tryPlayAudio();
-      if (audioStarted) {
-        document.removeEventListener('click', audioOnInteract);
-        document.removeEventListener('touchstart', audioOnInteract);
-      }
+      if (audioStarted) return;
+      startAudio();
+      document.removeEventListener('click', audioOnInteract);
+      document.removeEventListener('touchstart', audioOnInteract);
     }
     document.addEventListener('click', audioOnInteract);
     document.addEventListener('touchstart', audioOnInteract);
