@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>A Moment of Silence — Andrea Brett</title>
-  <meta name="description" content="Coming April 8, 2026. A Moment of Silence by Andrea Brett featuring Isaiah Bailey." />
+  <meta name="description" content="Coming April 14, 2026. A Moment of Silence by Andrea Brett featuring Isaiah Bailey." />
   <meta property="og:title" content="A Moment of Silence — Andrea Brett" />
-  <meta property="og:description" content="Someone wrote a song for exactly this moment. Coming April 8, 2026." />
+  <meta property="og:description" content="Someone wrote a song for exactly this moment. Coming April 14, 2026." />
   <meta property="og:image" content="./cover-art.png" />
   <meta property="og:type" content="music.song" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -85,29 +85,33 @@
     }
 
     /* ══════════════════════════════════════════════
-       SOUND TOGGLE
+       AUDIO HINT
     ══════════════════════════════════════════════ */
-    #sound-toggle {
-      position: fixed; top: 20px; right: 24px; z-index: 500;
-      background: none; border: none; cursor: pointer;
-      display: flex; align-items: center; gap: 8px;
-      opacity: 0; transition: opacity 0.8s ease;
-      padding: 6px;
+    #audio-hint {
+      position: absolute;
+      bottom: calc(100% + 16px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 15;
+      font-family: 'Touvlo', sans-serif;
+      font-style: italic; font-weight: 300;
+      font-size: 13px; letter-spacing: 0.12em;
+      color: rgba(245,242,237,0.75);
+      text-align: center; white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+      animation: audioHintPulse 2.8s ease-in-out infinite;
     }
-    #sound-toggle.visible { opacity: 1; }
-    #sound-toggle:hover .sound-label { color: var(--off-white); }
-
-    .sound-label {
-      font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
-      color: var(--dim); transition: color 0.3s;
-      user-select: none;
+    #audio-hint.visible { opacity: 1; }
+    #audio-hint.hidden { opacity: 0; animation: none; }
+    @keyframes audioHintPulse {
+      0%, 100% { filter: brightness(0.8); }
+      50% { filter: brightness(1.15); }
     }
-    .sound-icon {
-      width: 18px; height: 18px;
-      display: flex; align-items: center; justify-content: center;
+    @media (max-width: 600px) {
+      #audio-hint { font-size: 11px; letter-spacing: 0.08em; bottom: calc(100% + 10px); }
     }
-    .sound-icon svg { width: 16px; height: 16px; stroke: var(--dim); fill: none; stroke-width: 1.5; transition: stroke 0.3s; }
-    #sound-toggle:hover .sound-icon svg { stroke: var(--off-white); }
 
     /* ══════════════════════════════════════════════
        SCREENS — shared
@@ -213,7 +217,7 @@
     /* CTAs */
     .cta-wrap { display: flex; flex-direction: column; align-items: center; }
     .cta-swap {
-      width: 100%; max-width: 370px;
+      width: 100%; max-width: 520px;
       min-height: auto;
       text-align: center;
     }
@@ -235,32 +239,58 @@
     .presave-btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
 
     .email-label {
-      display: block; font-size: 10px; letter-spacing: 0.28em;
+      display: block; font-size: 10px; letter-spacing: 0.14em;
       text-transform: uppercase; color: #ffffff; margin-bottom: 11px;
+      text-align: center; white-space: nowrap;
     }
     .email-row {
-      display: flex; width: 100%;
-      border: 1px solid rgba(200,196,188,0.38); transition: border-color 0.3s;
+      display: flex; width: 100%; max-width: 360px;
+      margin-left: auto; margin-right: auto;
+      border: 1px solid rgba(200,196,188,0.75);
+      background: rgba(200,196,188,0.05);
+      transition: border-color 0.3s, background 0.3s;
     }
-    .email-row:focus-within { border-color: rgba(200,196,188,0.45); }
+    .email-row:focus-within { border-color: rgba(200,196,188,0.95); background: rgba(200,196,188,0.08); }
     .email-input {
       flex: 1; background: transparent; border: none;
       padding: 12px 15px;
-      font-family: 'Touvlo', sans-serif; font-size: 15px;
-      color: var(--white); outline: none;
+      font-family: 'Touvlo', sans-serif; font-size: 15px; font-weight: 400;
+      color: #ffffff; outline: none;
     }
-    .email-input::placeholder { color: rgba(200,196,188,0.25); }
+    .email-input::placeholder { color: rgba(245,242,237,0.55); }
     .email-submit {
-      background: transparent; border: none;
-      border-left: 1px solid rgba(200,196,188,0.18);
-      padding: 12px 15px;
+      background: rgba(200,196,188,0.08); border: none;
+      border-left: 1px solid rgba(200,196,188,0.4);
+      padding: 12px 18px;
       font-family: 'Touvlo', sans-serif;
       font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--dim); cursor: pointer; white-space: nowrap;
+      color: #ffffff; cursor: pointer; white-space: nowrap;
       transition: color 0.3s, background 0.3s;
     }
     .email-submit:hover { color: var(--white); background: rgba(200,196,188,0.05); }
-    .email-note { font-size: 10px; letter-spacing: 0.1em; color: #ffffff; margin-top: 10px; }
+    .email-note { font-size: 11px; letter-spacing: 0.08em; color: rgba(245,242,237,0.7); margin-top: 12px; font-style: italic; text-align: center; line-height: 1.5; }
+    .release-eyebrow {
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--off-white); margin-bottom: 18px;
+      line-height: 1.7; max-width: 560px; margin-left: auto; margin-right: auto;
+      text-wrap: balance;
+    }
+    .release-date {
+      font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--dim); margin-bottom: 22px;
+    }
+    .tile-hint {
+      font-style: italic; font-weight: 300;
+      font-size: clamp(11px, 1.3vw, 13px); letter-spacing: 0.06em;
+      color: rgba(245,242,237,0.55);
+      margin-top: 14px; text-align: center;
+    }
+    @media (max-width: 600px) {
+      .release-eyebrow { font-size: 9px; letter-spacing: 0.14em; margin-bottom: 6px; line-height: 1.6; max-width: 320px; }
+      .release-date { font-size: 9px; letter-spacing: 0.22em; margin-bottom: 14px; }
+      .tile-hint { font-size: 11px; margin-top: 10px; }
+      .email-note { font-size: 10px; margin-top: 8px; }
+    }
     .email-success { display: none; font-style: italic; font-size: 16px; color: rgba(200,196,188,0.55); }
 
     /* Silence question + submission */
@@ -423,7 +453,7 @@
       .cta-wrap { margin-top: 20px; }
       .cta-swap { max-width: 220px; min-height: auto; margin: 0 auto; }
 
-      .email-label { font-size: 7.5px; letter-spacing: 0.10em; margin-bottom: 5px; white-space: nowrap; }
+      .email-label { font-size: 8px; letter-spacing: 0.08em; margin-bottom: 8px; white-space: normal; line-height: 1.6; text-wrap: balance; }
 
       .email-input { padding: 10px 12px; font-size: 13px; }
       .email-submit { padding: 10px 12px; font-size: 9px; }
@@ -444,26 +474,10 @@
 </head>
 <body>
 
-  <audio id="snippet" src="./audio.mp3" preload="none" loop></audio>
+  <audio id="snippet" src="./audio.m4a" preload="none" loop></audio>
 
   <!-- Cover art background -->
   <div id="page-bg"></div>
-
-  <!-- Sound toggle -->
-  <button id="sound-toggle" aria-label="Toggle sound">
-    <div class="sound-icon">
-      <svg id="icon-on" viewBox="0 0 24 24" style="display:block">
-        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-      </svg>
-      <svg id="icon-off" viewBox="0 0 24 24" style="display:none">
-        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-        <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
-      </svg>
-    </div>
-    <span class="sound-label" id="sound-label">Sound on</span>
-  </button>
 
   <!-- ═══ Song + Arc + CTA ═══ -->
   <div class="screen active" id="screen-song">
@@ -494,24 +508,30 @@
     </div>
 
     <div class="arc-center">
+      <div id="audio-hint">Click anywhere to hear the instrumental</div>
+      <div class="reveal d1">
+        <p class="release-eyebrow">A new song featuring the voice of the Phantom of the Opera, North American Tour</p>
+      </div>
       <div class="reveal d1"><h1 class="song-title"><span class="line-nowrap">A Moment</span><br><span class="line-nowrap">of Silence</span></h1></div>
       <div class="reveal d2">
         <p class="artist-name line-nowrap">Andrea Brett</p>
         <p class="by-line line-nowrap">Featuring Isaiah Bailey</p>
+        <p class="tile-hint">Tap the images to see how others take their moment of silence</p>
       </div>
       <div class="rule reveal d3"></div>
       <div class="cta-wrap reveal d4">
         <div class="cta-swap">
           <div id="email-section">
-            <label class="email-label line-nowrap" for="email-input">Get notified on release day</label>
+            <label class="email-label" for="email-input">Follow the story — pre-save the song — out April 14</label>
             <div class="email-row" id="email-row">
               <input id="email-input" type="email" class="email-input" placeholder="your@email.com" autocomplete="email" />
-              <button class="email-submit" id="email-submit">Pre-save</button>
+              <button class="email-submit" id="email-submit">Submit</button>
             </div>
+            <p class="email-note">Check your email for the story and what's coming next.</p>
             <div class="email-success" id="email-success" aria-live="polite">You're on the list.</div>
           </div>
           <div class="silence-section" id="silence-section" style="display:none; opacity:0;">
-            <p class="silence-question">What's your favourite way to take a moment of silence?</p>
+            <p class="silence-question">What's your favorite way to take a moment of silence?</p>
             <div id="silence-form">
               <textarea id="silence-input" class="silence-input" placeholder="Share yours..." rows="3"></textarea>
               <button class="silence-submit" id="silence-submit">Submit</button>
@@ -536,14 +556,14 @@
   <!-- Listening party modal -->
   <div id="modal-overlay" role="dialog" aria-modal="true">
     <div class="modal">
-      <p class="modal-eyebrow">April 8, 2026</p>
+      <p class="modal-eyebrow">April 14, 2026</p>
       <h2 class="modal-title">Join the Listening Party</h2>
       <p class="modal-body">We're gathering to hear the song together on the day it releases. Want to be in the room?</p>
       <div class="modal-btns" id="modal-btns">
         <button class="modal-btn-yes" id="modal-yes">Yes — add me to the list</button>
         <button class="modal-btn-no" id="modal-no">Maybe another time</button>
       </div>
-      <div class="modal-confirm" id="modal-confirm">We'll save you a seat.<br>See you April 8th.</div>
+      <div class="modal-confirm" id="modal-confirm">We'll save you a seat.<br>See you April 14th.</div>
     </div>
   </div>
 
@@ -566,17 +586,10 @@
     }
 
     // ─── State ────────────────────────────────────────────────────
-    let   soundOn   = true;
-
     const audioEl   = document.getElementById('snippet');
-    const soundBtn  = document.getElementById('sound-toggle');
-    const iconOn    = document.getElementById('icon-on');
-    const iconOff   = document.getElementById('icon-off');
-    const soundLbl  = document.getElementById('sound-label');
 
     // ─── Song screen init ─────────────────────────────────────────
     function enterSong() {
-      soundBtn.classList.add('visible');
       layoutArc();
       initTileOverlays();
       // Stagger tile reveals, then start orbit animation
@@ -634,7 +647,7 @@
 
         // Inscribe content inside the arc with uniform padding from tiles.
         const rInner = r - tileSize / 2 - PAD;
-        center.style.top = '68%';
+        center.style.top = '62%';
 
         // Step 1: Measure widest nowrap title line at reference size.
         // Only measure inline spans inside the title (block elements report container width).
@@ -841,11 +854,24 @@
       if (orbitRAF) { cancelAnimationFrame(orbitRAF); orbitRAF = null; }
     }
 
-    // ─── Sound toggle ─────────────────────────────────────────────
+    // ─── Audio playback ───────────────────────────────────────────
+    let audioStarted = false;
+    const audioHint = document.getElementById('audio-hint');
+
+    function hideAudioHint() {
+      if (!audioHint) return;
+      audioHint.classList.remove('visible');
+      audioHint.classList.add('hidden');
+    }
+
     function tryPlayAudio() {
-      if (!soundOn) return;
+      if (audioStarted) return;
       audioEl.volume = 0;
-      audioEl.play().then(() => fadeAudio(audioEl, 0, 0.5, 1200)).catch(() => {});
+      audioEl.play().then(() => {
+        audioStarted = true;
+        hideAudioHint();
+        fadeAudio(audioEl, 0, 0.5, 1200);
+      }).catch(() => {});
     }
 
     function fadeAudio(el, from, to, ms) {
@@ -856,19 +882,6 @@
         if ((delta > 0 && v >= to) || (delta < 0 && v <= to)) { el.volume = to; clearInterval(t); }
       }, tick);
     }
-
-    soundBtn.addEventListener('click', () => {
-      soundOn = !soundOn;
-      iconOn.style.display  = soundOn ? 'block' : 'none';
-      iconOff.style.display = soundOn ? 'none'  : 'block';
-      soundLbl.textContent  = soundOn ? 'Sound on' : 'Sound off';
-      if (soundOn) {
-        tryPlayAudio();
-      } else {
-        fadeAudio(audioEl, audioEl.volume, 0, 600);
-        setTimeout(() => audioEl.pause(), 700);
-      }
-    });
 
     // ─── Email ────────────────────────────────────────────────────
     async function handleEmail() {
@@ -1093,11 +1106,25 @@
 
     // ─── Start ────────────────────────────────────────────────────
     enterSong();
-    // Audio requires user interaction — try on first click
-    document.addEventListener('click', function audioOnInteract() {
+    // Try to autoplay on load — most browsers will block this.
+    tryPlayAudio();
+    // If autoplay didn't take hold, reveal the hint after the staggered
+    // content reveals finish (last one lands around 2.7s).
+    setTimeout(() => {
+      if (!audioStarted && audioHint) {
+        audioHint.classList.add('visible');
+      }
+    }, 2800);
+    // Fallback: start on first user interaction (click or touch).
+    function audioOnInteract() {
       tryPlayAudio();
-      document.removeEventListener('click', audioOnInteract);
-    }, { once: true });
+      if (audioStarted) {
+        document.removeEventListener('click', audioOnInteract);
+        document.removeEventListener('touchstart', audioOnInteract);
+      }
+    }
+    document.addEventListener('click', audioOnInteract);
+    document.addEventListener('touchstart', audioOnInteract);
   </script>
 </body>
 </html>
