@@ -198,13 +198,14 @@
       margin-bottom: 18px;
     }
     .artist-name {
-      font-size: clamp(11px, 1.4vw, 15px);
-      letter-spacing: 0.24em; text-transform: uppercase; color: var(--off-white);
+      font-size: clamp(12px, 1.8vw, 19px);
+      letter-spacing: 0.42em; text-transform: uppercase; color: var(--off-white);
       white-space: nowrap;
     }
-    .by-line {
-      font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
-      color: #ffffff; margin-top: 8px;
+    .artist-credit {
+      font-size: clamp(11px, 1.4vw, 15px);
+      letter-spacing: 0.28em; text-transform: uppercase; color: var(--off-white);
+      margin-top: 2px; white-space: nowrap;
     }
     .rule {
       width: 1px; height: 42px;
@@ -434,7 +435,7 @@
 
       .arc-center {
         padding: 4px 16px;
-        top: 58%;
+        top: 55%;
       }
 
       .song-title {
@@ -444,11 +445,15 @@
       }
 
       .artist-name {
-        font-size: 11px;
-        letter-spacing: 0.14em;
+        font-size: 14px;
+        letter-spacing: 0.26em;
       }
 
-      .by-line { display: none; }
+      .artist-credit {
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        margin-top: 2px;
+      }
 
       .rule { display: none; }
 
@@ -537,7 +542,8 @@
       </div>
       <div class="reveal d1"><h1 class="song-title"><span class="line-nowrap">A Moment</span><br><span class="line-nowrap">of Silence</span></h1></div>
       <div class="reveal d2">
-        <p class="artist-name">Andrea Brett feat. Isaiah Bailey</p>
+        <p class="artist-name">Isaiah Bailey</p>
+        <p class="artist-credit">Written by Andrea Brett</p>
         <p class="tile-hint">Tap the images to see how others take their moment of silence</p>
       </div>
       <div class="rule reveal d3"></div>
@@ -675,7 +681,7 @@
 
         // Inscribe content inside the arc with uniform padding from tiles.
         const rInner = r - tileSize / 2 - PAD;
-        center.style.top = '62%';
+        center.style.top = '58%';
 
         // Step 1: Measure widest nowrap title line at reference size.
         // Only measure inline spans inside the title (block elements report container width).
